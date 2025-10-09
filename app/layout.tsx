@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script type="application/ld+json">
+        {/* <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -70,8 +70,7 @@ export default function RootLayout({
   },
   "description": "A frontend developer specializing in React, Tailwind, and modern web apps."
 }
-</script>
-
+</script> */}
       </head>
       <body>
         <Providers>
