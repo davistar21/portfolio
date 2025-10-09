@@ -21,7 +21,7 @@ const WorkExperienceCard = ({
   title: string;
   issuer: string;
   date: string;
-  icon: JSX.Element;
+  icon: any;
   certificate?: string;
 }) => {
   return (

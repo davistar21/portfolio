@@ -19,7 +19,6 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
-    "react/prop-types": "off",
   },
 ];
 
