@@ -7,7 +7,7 @@ export default function AnimatedText({ words }: { words: string[] }) {
   const [forward, setForward] = useState(true);
 
   useEffect(() => {
-    let timeout: any;
+    let timeout: ReturnType<typeof setTimeout>;
     const word = words[index];
     if (forward) {
       if (display.length < word.length) {
