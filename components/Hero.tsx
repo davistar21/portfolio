@@ -18,7 +18,7 @@ const Hero = () => {
       >
         Frontend Developer and AI Enthusiast
       </motion.h2>
-      <AnimatedText words={["Hi, I'm Eyitayo.", "I build web experiences."]} />
+      <AnimatedText words={["I build web experiences."]} />
       <motion.p
         className="mb-6 text-gray-400/80"
         initial={{ opacity: 0 }}
@@ -37,10 +37,13 @@ const Hero = () => {
         transition={{ duration: 0.5, delay: 0.8 }}
         viewport={{ once: true }}
       >
-        Whether you're starting fresh or growing an idea, I create seamless,
+        Whether you&#39;re starting fresh or growing an idea, I create seamless,
         user-focused experiences — from clean UI/UX to efficient backend
-        systems. Let’s{" "}
-        <a className="underline cursor-pointer" href="#connect">
+        systems. Let&rsquo;s{" "}
+        <a
+          className="underline cursor-pointer hover:text-gray-300 transition-colors"
+          href="#connect"
+        >
           connect
         </a>{" "}
         and build something great together.

@@ -33,7 +33,7 @@ export default function AnimatedText({ words }: { words: string[] }) {
     <h1 className="text-gray-300/80 leading-tight">
       <span>{display}</span>
       <span
-        className="inline-block w-1 bg-black dark:bg-white ml-2 animate-pulse"
+        className="inline-block w-[2px] bg-black dark:bg-white ml-2 animate-spin"
         style={{ height: "1.1em" }}
       />
     </h1>

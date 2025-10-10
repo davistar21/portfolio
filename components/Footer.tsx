@@ -49,6 +49,7 @@ export default function Footer() {
           </a>
         ))}
       </div>
+      <ContactForm />
       <div className="text-sm text-gray-500 mt-4 border-t pt-4 pb-6 text-center flex gap-4 justify-around items-center">
         <div>
           &copy; {new Date().getFullYear()} Obembe Eyitayo. All rights reserved.
@@ -60,6 +61,7 @@ export default function Footer() {
 
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
+import ContactForm from "./ContactForm";
 
 export function MouseFollowButton({
   children,
