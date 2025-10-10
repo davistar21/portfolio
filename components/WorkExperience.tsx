@@ -4,6 +4,7 @@ import { Laptop2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { ForwardRefExoticComponent, JSX } from "react";
 import {
+  faLaptop,
   faLaptopCode,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +14,12 @@ const workExperienceDetails = [
     issuer: "Sphiderass Web Ltd.",
     date: "Sep 2024 - Dec 2024",
     icon: faLaptopCode,
+  },
+  {
+    title: "Freelancer",
+    issuer: "Upwork",
+    date: "Sep 2025 - Present",
+    icon: faLaptop,
   },
 ];
 const WorkExperienceCard = ({
