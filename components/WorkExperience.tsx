@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Laptop2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { JSX } from "react";
+import { ForwardRefExoticComponent, JSX } from "react";
 import { faLaptopCode } from "@fortawesome/free-solid-svg-icons";
 const workExperienceDetails = [
   {
@@ -21,7 +21,11 @@ const WorkExperienceCard = ({
   title: string;
   issuer: string;
   date: string;
-  icon: any;
+  icon:
+    | ForwardRefExoticComponent<
+        JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
+      >
+    | JSX.Element;
   certificate?: string;
 }) => {
   return (

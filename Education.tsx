@@ -7,6 +7,7 @@ import {
   faCertificate,
 } from "@fortawesome/free-solid-svg-icons";
 import { ArrowUpRight } from "lucide-react";
+import { JSX, ForwardRefExoticComponent } from "react";
 
 const educationDetails = [
   {
@@ -48,7 +49,11 @@ const EducationCard = ({
   title: string;
   issuer: string;
   date: string;
-  icon: JSX.Element;
+  icon:
+    | ForwardRefExoticComponent<
+        React.SVGProps<SVGSVGElement> & { title?: string | undefined }
+      >
+    | JSX.Element;
   certificate?: string;
 }) => {
   return (
