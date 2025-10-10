@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/file.svg" />
+        <link rel="icon" href="/globe.svg" />
         {/* <script type="application/ld+json">
 {
   "@context": "https://schema.org",

@@ -34,11 +34,11 @@ const WorkExperienceCard = ({
       transition={{ duration: 0.6 }}
       className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4 items-start"
     >
-      <div className="flex md:flex-col flex-row-reverse gap-4 items-start flex-1 w-full">
-        <div className="w-5 h-5 mt-auto">
+      <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
+        <div className="w-5 h-5 md:mt-0 mt-auto">
           <FontAwesomeIcon icon={icon} />
         </div>
-        <div className="flex-1 flex flex-col justify-between">
+        <div className="flex flex-col justify-between mr-auto">
           <span className="!m-0">{title}</span>
           <p className=" text-gray-400">{issuer}</p>
         </div>
