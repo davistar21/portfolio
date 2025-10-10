@@ -30,11 +30,11 @@ export default function ContactForm() {
     const data = await res.json();
     setLoading(false);
 
-    if (res.ok) {
+    if (!res.ok) {
+      setStatus("✅ Message sent successfully!");
       setTimeout(() => {
-        setStatus("✅ Message sent successfully!");
+        setStatus(null);
       }, 1000);
-      setStatus(null);
       form.reset();
     } else {
       setStatus(`❌ ${data.error}`);
