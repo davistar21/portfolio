@@ -20,8 +20,9 @@ export const metadata = {
     "AWS Services",
   ],
   openGraph: {
-    title: "Eyitayo | Portfolio",
-    description: "Crafting beautiful, performant web experiences.",
+    title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
+    description:
+      "Frontend Developer & Engineer — Building sleek, functional experiences with Next.js, TypeScript, and Tailwind.",
     url: "https://eyitayobembe.vercel.app",
     siteName: "Eyitayo Obembe Portfolio",
     images: [
@@ -37,8 +38,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eyitayo | Portfolio",
-    description: "Frontend Developer & Engineer — Sleek, functional web apps.",
+    title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
+    description:
+      "Frontend Developer & Engineer — Building sleek, functional experiences with Next.js, TypeScript, and Tailwind.",
     creator: "@yourTwitterHandle",
     images: ["https://eyitayobembe.vercel.app/og-image.png"],
   },

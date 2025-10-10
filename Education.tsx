@@ -36,7 +36,8 @@ const educationDetails = [
     issuer: "UniAthena",
     date: "20 Sept 2025",
     icon: faCertificate,
-    certificate: "#",
+    certificate:
+      "https://uniathena.com/verify/certificate?certID=7822-9232-3389",
   },
 ];
 
