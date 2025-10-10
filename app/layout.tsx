@@ -52,6 +52,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta
+          name="google-site-verification"
+          content="BOj-Y0MozoW4Rh9GLYuRmofJmLXW32SIz16D7h8DC9E"
+        />
         <link rel="icon" href="/globe.svg" />
         {/* <script type="application/ld+json">
 {
