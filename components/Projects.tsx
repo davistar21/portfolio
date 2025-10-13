@@ -12,14 +12,17 @@ const projects = [
     tags: [
       "React Router v7",
       "TailwindCSS",
+      "Zustand",
+      "Framer Motion",
       "AWS Amplify",
-      "AWS Cognito",
-      "AWS Lambda",
+      "Amazon Cognito",
+      "Amazon Lambda",
+      "Amazon Bedrock",
       "AWS Textract",
-      "AWS S3",
-      "AWS DynamoDB",
-      "AWS API Gateway",
-      "AWS CloudWatch",
+      "Amazon S3",
+      "DynamoDB",
+      "API Gateway",
+      "Amazon CloudWatch",
     ],
   },
   {
@@ -31,7 +34,13 @@ const projects = [
     },
     description:
       "AI-powered resume analysis tool built to give you instant and insightful feedback on your resume",
-    tags: ["React Router v7", "TailwindCSS", "Puter.js", "Claude API"],
+    tags: [
+      "React Router v7",
+      "Framer Motion",
+      "TailwindCSS",
+      "Puter.js",
+      "Claude API",
+    ],
   },
   {
     link: "https://url-shortener-app-wheat-eight.vercel.app/",

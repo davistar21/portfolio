@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Projects from "@/components/Projects";
 import Education from "@/Education";
 import WorkExperience from "@/components/WorkExperience";
+import Achievements from "@/components/Achievements";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <Projects />
       <Education />
       <WorkExperience />
+      <Achievements />
     </section>
   );
 }
