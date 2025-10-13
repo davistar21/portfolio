@@ -16,7 +16,7 @@ const achievementDetails = [
     issuer: "AWS Cloud User Security Group",
     date: "October 11, 2025",
     icon: faTrophy,
-    href: "nm",
+    href: "https://www.linkedin.com/feed/update/urn:li:activity:7383116434765201408/",
   },
 ];
 
