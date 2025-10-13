@@ -39,7 +39,7 @@ const AchievementCard = ({
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.5 }}
       viewport={{ once: true }}
-      className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4 items-start"
+      className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4"
     >
       <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
         <div className="w-5 h-5 md:mt-0 mt-auto">
