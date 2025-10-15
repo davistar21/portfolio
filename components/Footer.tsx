@@ -15,8 +15,8 @@ export default function Footer() {
     {
       name: "Whatsapp",
       href:
-        "https:/wa.me/2348085716180?text=" +
-        "Hello, I'd like to know about Studently.",
+        "https://wa.me/2348085716180?text=" +
+        "Hello, I am interested in your services",
     },
     {
       name: "Mail",
@@ -79,9 +79,7 @@ export function MouseFollowButton({
 
     const rect = button.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    button;
     const y = e.clientY - rect.top;
-    button;
 
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
