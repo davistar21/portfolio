@@ -4,31 +4,27 @@ import { Laptop2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { ForwardRefExoticComponent, JSX } from "react";
 import {
+  faGraduationCap,
   faLaptop,
   faLaptopCode,
+  faList,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-const workExperienceDetails = [
+const volunteeringDetails = [
   {
-    title: "Frontend Developer ",
-    issuer: "Engineering Career Expo",
-    date: "Nov 2025 - Present",
-    icon: faLaptopCode,
+    title: "Operations Team Member",
+    issuer: "SEES UNILAG",
+    date: "Oct 2025 - Present",
+    icon: faList,
   },
   {
-    title: "Freelancer",
-    issuer: "Upwork",
-    date: "Sep 2025 - Present",
-    icon: faLaptop,
-  },
-  {
-    title: "Frontend Developer Intern",
-    issuer: "Sphiderass Web Ltd.",
-    date: "Sep 2024 - Dec 2024",
-    icon: faLaptopCode,
+    title: "Frontend Instructor",
+    issuer: "Microsoft Learn Student Ambassadors (MLSA) UNILAG",
+    date: "Oct 2025 - Present",
+    icon: faGraduationCap,
   },
 ];
-const WorkExperienceCard = ({
+const VolunteeringCard = ({
   title,
   issuer,
   date,
@@ -42,8 +38,8 @@ const WorkExperienceCard = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
       className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4 items-start"
@@ -64,17 +60,17 @@ const WorkExperienceCard = ({
   );
 };
 
-const WorkExperience = () => {
+const Volunteering = () => {
   return (
     <div>
-      <h1 className="mb-4 text-lg font-semibold">Work Experience</h1>
+      <h1 className="mb-4 text-lg font-semibold">Volunteering</h1>
       <div className="space-y-4">
-        {workExperienceDetails.map((e, idx) => (
-          <WorkExperienceCard {...e} key={idx} />
+        {volunteeringDetails.map((e, idx) => (
+          <VolunteeringCard {...e} key={idx} />
         ))}
       </div>
     </div>
   );
 };
 
-export default WorkExperience;
+export default Volunteering;

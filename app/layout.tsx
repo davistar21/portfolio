@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Providers } from "@/components/Providers";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { CustomToaster } from "@/components/CustomToaster";
 
 export const metadata = {
   title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
@@ -83,8 +84,8 @@ export default function RootLayout({
         <Providers>
           <div className="md:w-[768px] w-full px-2 mx-auto">
             <main className="py-10">{children}</main>
-            <Footer />
           </div>
+          <CustomToaster />
         </Providers>
         <Analytics />
       </body>

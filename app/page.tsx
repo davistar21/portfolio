@@ -5,6 +5,8 @@ import Projects from "@/components/Projects";
 import Education from "@/Education";
 import WorkExperience from "@/components/WorkExperience";
 import Achievements from "@/components/Achievements";
+import Footer from "@/components/Footer";
+import Volunteering from "@/components/Volunteering";
 
 export default function HomePage() {
   return (
@@ -13,7 +15,9 @@ export default function HomePage() {
       <Projects />
       <Education />
       <WorkExperience />
+      <Volunteering />
       <Achievements />
+      <Footer />
     </section>
   );
 }

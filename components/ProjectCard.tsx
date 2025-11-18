@@ -19,7 +19,7 @@ export default function ProjectCard({
   description: string;
   tags?: string[];
   img: Image;
-  link: string;
+  link?: string;
 }) {
   return (
     <motion.a
@@ -27,7 +27,7 @@ export default function ProjectCard({
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className=" w-[330px] flex flex-col mx-auto snap-center"
-      href={link}
+      href={link ?? "#"}
       target="_blank"
       rel="noopener noreferrer"
     >

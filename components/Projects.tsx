@@ -2,30 +2,6 @@ import ProjectCard from "./ProjectCard";
 
 const projects = [
   {
-    link: "https://studently-main.vercel.app",
-    title: "Studently",
-    img: {
-      src: "/studently-dashboard.jpeg",
-      alt: "Studently - AI Study Assistant",
-    },
-    description: "All-in-One AI-Powered Study Assistant",
-    tags: [
-      "React Router v7",
-      "TailwindCSS",
-      "Zustand",
-      "Framer Motion",
-      "AWS Amplify",
-      "Amazon Cognito",
-      "Amazon Lambda",
-      "Amazon Bedrock",
-      "AWS Textract",
-      "Amazon S3",
-      "DynamoDB",
-      "API Gateway",
-      "Amazon CloudWatch",
-    ],
-  },
-  {
     link: "https://ai-resurne-analyz3r.vercel.app/",
     title: "AI Resume Analyzer",
     img: {
@@ -65,27 +41,62 @@ const projects = [
     tags: ["React + TS", "TailwindCSS", "OpenMeteo API"],
   },
   {
-    link: "https://crypto-app-1-seven.vercel.app/",
-    title: "Koinery",
+    // link: "https://studently-main.vercel.app",
+    title: "Studently",
     img: {
-      src: "/koinery-ss.png",
+      src: "/studently-dashboard.jpeg",
       alt: "Studently - AI Study Assistant",
     },
-    description:
-      "A cryptocurrency market tracker that displays real-time price data, trends, and market stats using the CoinGecko API.",
-    tags: ["React + TS", "TailwindCSS", "CoinGecko API"],
+    description: "All-in-One AI-Powered Study Assistant",
+    tags: [
+      "React Router v7",
+      "TailwindCSS",
+      "Zustand",
+      "Framer Motion",
+      "AWS Amplify",
+      "Amazon Cognito",
+      "Amazon Lambda",
+      "Amazon Bedrock",
+      "AWS Textract",
+      "Amazon S3",
+      "DynamoDB",
+      "API Gateway",
+      "Amazon CloudWatch",
+    ],
   },
-  {
-    link: "https://ec90cd9e.vercel.app/",
-    title: "E-Commerce Application",
-    img: {
-      src: "/e-coommerce-ss.png",
-      alt: "Studently - AI Study Assistant",
-    },
-    description:
-      "A modern e-commerce web app with product listings, cart functionality, and secure checkout. Deployed on AWS EC2 for scalability.",
-    tags: ["React + TS", "TailwindCSS", "AWS EC2"],
-  },
+  // {
+  //   link: "https://crypto-app-1-seven.vercel.app/",
+  //   title: "Koinery",
+  //   img: {
+  //     src: "/koinery-ss.png",
+  //     alt: "Studently - AI Study Assistant",
+  //   },
+  //   description:
+  //     "A cryptocurrency market tracker that displays real-time price data, trends, and market stats using the CoinGecko API.",
+  //   tags: ["React + TS", "TailwindCSS", "CoinGecko API"],
+  // },
+  // {
+  //   link: "https://ec90cd9e.vercel.app/",
+  //   title: "E-Commerce Application",
+  //   img: {
+  //     src: "/e-coommerce-ss.png",
+  //     alt: "Studently - AI Study Assistant",
+  //   },
+  //   description:
+  //     "A modern e-commerce web app with product listings, cart functionality, and secure checkout. Deployed on AWS EC2 for scalability.",
+  //   tags: ["React + TS", "TailwindCSS", "AWS EC2"],
+  // },
+  // {
+  //   link: "https://data-privacy-hack.vercel.app/",
+  //   title: "NOVA Privacy",
+  //   img: {
+  //     src: "/e-coommerce-ss.png",
+  //     alt: "Studently - AI Study Assistant",
+  //   },
+  //   description:
+  //     "A modern e-commerce web app with product listings, cart functionality, and secure checkout. Deployed on AWS EC2 for scalability.",
+  //   tags: ["React + TS", "TailwindCSS", "AWS EC2"],
+  // },
 ];
 
 const Projects = () => {

@@ -65,9 +65,11 @@ import ContactForm from "./ContactForm";
 
 export function MouseFollowButton({
   children,
+  disabled = false,
   className = "",
 }: {
   children?: React.ReactNode;
+  disabled?: boolean;
   className?: string;
 }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -99,6 +101,7 @@ export function MouseFollowButton({
       ref={buttonRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      disabled={disabled}
       className={`transition-transform duration-300 ease-out cursor-pointer ${className}`}
       style={{ transform }}
     >
