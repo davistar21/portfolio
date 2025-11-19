@@ -18,7 +18,12 @@ const Hero = () => {
       >
         Frontend Developer and AI Enthusiast
       </motion.h2>
-      <AnimatedText words={["I build web experiences."]} />
+      <AnimatedText
+        words={[
+          "I build web experiences.",
+          "I build scalable digital solutions",
+        ]}
+      />
       <motion.p
         className="mb-6 text-gray-400/80"
         initial={{ opacity: 0 }}

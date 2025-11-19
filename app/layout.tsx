@@ -5,6 +5,7 @@ import { Providers } from "@/components/Providers";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { CustomToaster } from "@/components/CustomToaster";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export const metadata = {
   title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
@@ -83,6 +84,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <div className="md:w-[768px] w-full px-2 mx-auto">
+            {/* <ThemeToggle /> */}
             <main className="py-10">{children}</main>
           </div>
           <CustomToaster />

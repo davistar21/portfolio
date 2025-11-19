@@ -21,6 +21,15 @@ body,
 * {
   scroll-behavior: smooth;
 }
+:root {
+  --bg: #000;
+}
+.dark {
+  --bg: #fff;
+}
+@theme inline {
+  --color-bg: var(--bg);
+}
 @layer components {
   .container {
     @apply mx-auto;

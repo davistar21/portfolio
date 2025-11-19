@@ -62,9 +62,9 @@ export default function ContactForm() {
       />
       <MouseFollowButton
         disabled={loading}
-        className="items-center ml-auto flex gap-2 bg-gray-800 shadow-md rounded-full px-4 md:px-3 py-2 text-lg text-gray-400  hover:bg-gray-800/90  hover:text-gray-200 transition-colors"
+        className="items-center ml-auto flex gap-2 bg-gray-800 shadow-md rounded-full px-4 md:px-3 py-2 text-base text-gray-400  hover:bg-gray-800/90  hover:text-gray-200 transition-colors"
       >
-        {loading ? "Sending..." : "Send Message"} <Send size={16} />
+        {loading ? "Sending..." : "Send Message"} <Send size={14} />
       </MouseFollowButton>
     </form>
   );

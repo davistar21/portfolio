@@ -30,7 +30,7 @@ export default function Footer() {
         Feel free to contact me at{" "}
         <a
           href="mailto:eyitayobembe@gmail.com"
-          className="text-gray-200 underline"
+          className="text-gray-200 hover:underline"
         >
           eyitayobembe@gmail.com
         </a>
