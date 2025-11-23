@@ -101,7 +101,7 @@ const projects = [
 
 const Projects = () => {
   return (
-    <div className="">
+    <div className="" id="projects">
       <h2 className="font-semibold text-lg mb-4 ">Featured Projects</h2>
       {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center"> */}
       <div className="flex overflow-x-auto scrollbar-hide gap-8 snap-x snap-mandatory">
