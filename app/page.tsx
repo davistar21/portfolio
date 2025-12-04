@@ -17,7 +17,6 @@ export default function HomePage() {
       <WorkExperience />
       <Volunteering />
       <Achievements />
-      <Footer />
     </section>
   );
 }

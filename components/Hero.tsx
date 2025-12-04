@@ -16,7 +16,7 @@ const Hero = () => {
         transition={{ duration: 0.6, delay: 1 }}
         viewport={{ once: true }}
       >
-        Frontend Developer and AI Enthusiast
+        Full Stack AI Engineer
       </motion.h2>
       <AnimatedText
         words={[

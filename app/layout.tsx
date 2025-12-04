@@ -55,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta
           name="google-site-verification"
@@ -85,10 +85,11 @@ export default function RootLayout({
       <body>
         <Providers>
           <div className="md:w-[768px] w-full px-2 mx-auto">
-            {/* <ThemeToggle /> */}
+            <ThemeToggle />
             <Header />
 
             <main className="py-10">{children}</main>
+            <Footer />
           </div>
           <CustomToaster />
         </Providers>
