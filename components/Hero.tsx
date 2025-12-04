@@ -18,6 +18,7 @@ const Hero = () => {
       >
         Full Stack AI Engineer
       </motion.h2>
+      <div className="text-primary">Helo word</div>
       <AnimatedText
         words={[
           "I build web experiences.",

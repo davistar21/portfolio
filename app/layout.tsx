@@ -88,7 +88,7 @@ export default function RootLayout({
             <ThemeToggle />
             <Header />
 
-            <main className="py-10">{children}</main>
+            <main className="py-10 ">{children}</main>
             <Footer />
           </div>
           <CustomToaster />
