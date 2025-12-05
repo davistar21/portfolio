@@ -333,7 +333,16 @@ export default function ProjectsManager() {
     </div>
   );
 }
-
+interface ProjectDialogProps {
+  startCreate: () => void;
+  setEditingProject: (editingProject: Project | null) => void;
+  isCreating: boolean;
+  setIsCreating: (isCreating: boolean) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  setFormData: (formData: Omit<Project, "id">) => void;
+  editingProject: Project | null;
+  formData: Omit<Project, "id">;
+}
 const AddProjectDialog = ({
   startCreate,
   setEditingProject,
@@ -343,7 +352,7 @@ const AddProjectDialog = ({
   handleSubmit,
   formData,
   setFormData,
-}) => {
+}: ProjectDialogProps) => {
   return (
     <Dialog
       open={!!isCreating || !!editingProject}
