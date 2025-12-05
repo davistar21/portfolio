@@ -158,7 +158,7 @@ import Link from "next/link";
 export const SixDigitInput: React.FC = () => {
   const [values, setValues] = useState<string[]>(["", "", "", "", "", ""]);
   const [isValid, setIsValid] = useState<boolean | null>(null);
-  const inputsRef = useRef<HTMLInputElement[]>([]);
+  const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
   const { authenticateLocal } = useAuthStore();
   const handleChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return; // only digits
@@ -245,7 +245,9 @@ export const SixDigitInput: React.FC = () => {
               className="w-12 h-14 flex items-center justify-center bg-card border rounded-lg shadow-md"
             >
               <input
-                ref={(el) => (inputsRef.current[i] = el!)}
+                ref={(el) => {
+                  inputsRef.current[i] = el!;
+                }}
                 type="text"
                 inputMode="numeric"
                 pattern="\d*"
