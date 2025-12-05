@@ -339,10 +339,13 @@ interface ProjectDialogProps {
   isCreating: boolean;
   setIsCreating: (isCreating: boolean) => void;
   handleSubmit: (e: React.FormEvent) => void;
-  setFormData: (formData: Omit<Project, "id">) => void;
+
+  formData: Partial<ProjectInsert>;
+  setFormData: React.Dispatch<React.SetStateAction<Partial<ProjectInsert>>>;
+
   editingProject: Project | null;
-  formData: Omit<Project, "id">;
 }
+
 const AddProjectDialog = ({
   startCreate,
   setEditingProject,
