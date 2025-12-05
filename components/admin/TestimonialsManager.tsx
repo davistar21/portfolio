@@ -249,7 +249,9 @@ export default function TestimonialsManager() {
                 <p className="text-sm text-muted-foreground">
                   {item.role} at {item.company}
                 </p>
-                <p className="text-sm mt-2 line-clamp-2">"{item.message}"</p>
+                <p className="text-sm mt-2 line-clamp-2">
+                  &quot;{item.message}&quot;
+                </p>
               </div>
             </div>
             <div className="flex gap-2">

@@ -153,6 +153,7 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export const SixDigitInput: React.FC = () => {
   const [values, setValues] = useState<string[]>(["", "", "", "", "", ""]);
@@ -259,9 +260,9 @@ export const SixDigitInput: React.FC = () => {
         </div>
         <p className="text-sm">
           Made a mistake?{" "}
-          <a href="/" className="text-primary underline">
+          <Link href="/" className="text-primary underline">
             Return back home...
-          </a>
+          </Link>
         </p>
       </div>
     </motion.div>
