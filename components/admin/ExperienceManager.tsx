@@ -157,7 +157,7 @@ export default function ExperienceManager() {
                 className="w-full p-2 rounded-md border bg-background"
                 value={formData.type || "job"}
                 onChange={(e) =>
-                  setFormData({ ...formData, type: e.target.value as any })
+                  setFormData({ ...formData, type: e.target.value as string })
                 }
               >
                 <option value="job">Job</option>
