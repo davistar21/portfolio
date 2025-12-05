@@ -1,7 +1,9 @@
 const Blog = () => {
   return (
     <div>
-      <h1>Blog</h1>
+      <h1 className="animate-pulse">Incoming...</h1>
     </div>
   );
 };
+
+export default Blog;

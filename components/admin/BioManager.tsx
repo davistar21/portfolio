@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Database } from "@/types/supabase";
 import { toast } from "sonner";
+import { Database } from "@/types/supabase";
 import { Loader2 } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 type Bio = Database["public"]["Tables"]["bio"]["Row"];
 
@@ -18,15 +19,18 @@ export default function BioManager() {
   }, []);
 
   const fetchBio = async () => {
+    // Fetch the first bio entry if it exists
+    const { data, error } = await supabase.from("bio").select("*").limit(1);
+    console.log("Biodata, and error", data, error);
     setLoading(true);
-    const { data, error } = await supabase.from("bio").select("*").single();
+
     if (error) {
-      if (error.code !== "PGRST116") {
-        // Ignore "Row not found" error for initial setup
-        toast.error("Failed to fetch bio: " + error.message);
-      }
+      toast.error("Failed to fetch bio: " + error.message);
+    } else if (data && data.length > 0) {
+      setBio(data[0]);
     } else {
-      setBio(data);
+      // No bio exists yet, that's fine
+      setBio(null);
     }
     setLoading(false);
   };
@@ -48,8 +52,26 @@ export default function BioManager() {
 
   if (loading) {
     return (
-      <div className="flex justify-center p-8">
-        <Loader2 className="animate-spin" />
+      <div className="p-6 bg-card rounded-lg border shadow-sm">
+        <h2 className="text-2xl font-bold mb-4">Bio Management</h2>
+        <div className="flex flex-col gap-4">
+          <div>
+            Name
+            <Skeleton className="w-full h-10" />
+          </div>
+          <div>
+            Tagline
+            <Skeleton className="w-full h-10" />
+          </div>
+          <div>
+            Description
+            <Skeleton className="w-full h-30" />
+          </div>
+          <div>
+            Profile Image URL
+            <Skeleton className="w-full h-10" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -69,13 +91,12 @@ export default function BioManager() {
                 bio
                   ? { ...bio, name: e.target.value }
                   : ({
-                      id: "",
                       name: e.target.value,
                       tagline: "",
                       description: "",
                       profile_image_url: "",
-                      created_at: "",
-                      updated_at: "",
+                      created_at: new Date().toISOString(),
+                      updated_at: new Date().toISOString(),
                     } as Bio)
               )
             }
