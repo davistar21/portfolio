@@ -1,33 +1,16 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Laptop2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { ForwardRefExoticComponent, JSX } from "react";
 import {
-  faLaptop,
   faLaptopCode,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-const workExperienceDetails = [
-  {
-    title: "Frontend Developer ",
-    issuer: "Engineering Career Expo",
-    date: "Nov 2025 - Present",
-    icon: faLaptopCode,
-  },
-  {
-    title: "Freelancer",
-    issuer: "Upwork",
-    date: "Sep 2025 - Present",
-    icon: faLaptop,
-  },
-  {
-    title: "Frontend Developer Intern",
-    issuer: "Sphiderass Web Ltd.",
-    date: "Sep 2024 - Dec 2024",
-    icon: faLaptopCode,
-  },
-];
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { Database } from "@/types/supabase";
+
+type Experience = Database["public"]["Tables"]["experience"]["Row"];
+
 const WorkExperienceCard = ({
   title,
   issuer,
@@ -65,12 +48,47 @@ const WorkExperienceCard = ({
 };
 
 const WorkExperience = () => {
+  const [workExperience, setWorkExperience] = useState<Experience[]>([]);
+
+  useEffect(() => {
+    const fetchWorkExperience = async () => {
+      const { data } = await supabase
+        .from("experience")
+        .select("*")
+        .eq("type", "job")
+        .order("order_index", { ascending: true });
+
+      if (data) {
+        setWorkExperience(data);
+      }
+    };
+    fetchWorkExperience();
+  }, []);
+
+  if (workExperience.length === 0) return null;
+
   return (
     <div>
       <h1 className="mb-4 text-lg font-semibold">Work Experience</h1>
       <div className="space-y-4">
-        {workExperienceDetails.map((e, idx) => (
-          <WorkExperienceCard {...e} key={idx} />
+        {workExperience.map((item) => (
+          <WorkExperienceCard
+            key={item.id}
+            title={item.title}
+            issuer={item.organization}
+            date={`${new Date(item.start_date).toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            })} - ${
+              item.end_date
+                ? new Date(item.end_date).toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "Present"
+            }`}
+            icon={faLaptopCode}
+          />
         ))}
       </div>
     </div>

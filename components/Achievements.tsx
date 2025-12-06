@@ -1,24 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLaptop,
-  faGraduationCap,
-  faCertificate,
-  IconDefinition,
-  faTrophy,
-} from "@fortawesome/free-solid-svg-icons";
-import { ArrowUpRight, Trophy, TrophyIcon } from "lucide-react";
+import { IconDefinition, faTrophy } from "@fortawesome/free-solid-svg-icons";
+import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { Database } from "@/types/supabase";
 
-const achievementDetails = [
-  {
-    title: "1st Place, AWS Cloud User Security Group Hackathon 2025",
-    issuer: "AWS Cloud User Security Group",
-    date: "October 11, 2025",
-    icon: faTrophy,
-    href: "https://www.linkedin.com/feed/update/urn:li:activity:7383116434765201408/",
-  },
-];
+type Experience = Database["public"]["Tables"]["experience"]["Row"];
 
 const AchievementCard = ({
   title,
@@ -57,6 +46,8 @@ const AchievementCard = ({
           <a
             className="text-sm flex gap-[2px] items-center !text-gray-500 hover:text-gray-200 transition"
             href={href}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             View
             <ArrowUpRight size={16} />
@@ -67,12 +58,42 @@ const AchievementCard = ({
   );
 };
 const Achievements = () => {
+  const [achievements, setAchievements] = useState<Experience[]>([]);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      const { data } = await supabase
+        .from("experience")
+        .select("*")
+        .eq("type", "achievement")
+        .order("order_index", { ascending: true });
+
+      if (data) {
+        setAchievements(data);
+      }
+    };
+    fetchAchievements();
+  }, []);
+
+  if (achievements.length === 0) return null;
+
   return (
     <div>
       <h1 className="mb-4 text-lg font-semibold">Achievements</h1>
       <div className="space-y-4">
-        {achievementDetails.map((e, idx) => (
-          <AchievementCard {...e} key={idx} />
+        {achievements.map((item) => (
+          <AchievementCard
+            key={item.id}
+            title={item.title}
+            issuer={item.organization}
+            date={new Date(item.start_date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+            icon={faTrophy}
+            href={item.organization_url || undefined}
+          />
         ))}
       </div>
     </div>

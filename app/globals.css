@@ -296,3 +296,10 @@ body,
 nextjs-portal {
   display: none;
 }
+
+.scrollbar {
+  scrollbar-width: none;
+}
+button {
+  cursor: pointer;
+}

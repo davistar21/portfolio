@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { CustomToaster } from "@/components/CustomToaster";
 import ThemeToggle from "@/components/ThemeToggle";
 import Header from "@/components/Header";
+import MainLayout from "@/components/MainLayout";
 
 export const metadata = {
   title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
@@ -83,18 +84,9 @@ export default function RootLayout({
 </script> */}
       </head>
       <body>
-        <Providers>
-          <div className="md:w-[768px] w-full px-2 mx-auto">
-            <ThemeToggle />
-            <Header />
-            <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none " />
-            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none " />
-
-            <main className="py-10 ">{children}</main>
-            <Footer />
-          </div>
-          <CustomToaster />
-        </Providers>
+        <MainLayout>
+          <main>{children}</main>
+        </MainLayout>
         <Analytics />
       </body>
     </html>

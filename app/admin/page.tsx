@@ -26,15 +26,21 @@ import {
   MessageCircle,
   LogOut,
   Loader2,
+  Menu,
+  X,
 } from "lucide-react";
 
 import { Session } from "@supabase/supabase-js";
-
+import { AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("bio");
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const isMobile = useIsMobile();
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -56,8 +62,9 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <span>Loading...</span>
       </div>
     );
   }
@@ -104,47 +111,73 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen gap-6">
-      <aside className="w-full md:w-64 shrink-0">
-        <div className="sticky top-24 space-y-1">
-          <h1 className="text-2xl font-bold mb-6 px-4">Admin Dashboard</h1>
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted"
-              }`}
-            >
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          ))}
-          <div className="pt-4 mt-4 border-t">
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-destructive/10 text-destructive hover:text-destructive"
-            >
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </aside>
-      <main className="flex-1 min-w-0">
-        {activeTab === "bio" && <BioManager />}
-        {activeTab === "projects" && <ProjectsManager />}
-        {activeTab === "skills" && <SkillsManager />}
-        {activeTab === "education" && <EducationManager />}
-        {activeTab === "experience" && <ExperienceManager />}
-        {activeTab === "testimonials" && <TestimonialsManager />}
-        {activeTab === "contact" && <ContactManager />}
-        {activeTab === "socials" && <SocialsManager />}
-        {activeTab === "blog" && <BlogManager />}
-        {activeTab === "comments" && <CommentsManager />}
-      </main>
+    <div className="flex md:flex-row min-h-screen gap-6">
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="fixed top-3 left-3 z-[9999] cursor-pointer"
+      >
+        {isSidebarOpen ? (
+          <X className="w-6 h-6" />
+        ) : (
+          <Menu className="w-6 h-6" />
+        )}
+      </button>
+
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.aside
+            initial={{ x: "-100%", opacity: 0 }}
+            animate={{ x: "0%", opacity: 1 }}
+            exit={{ x: "-100%", opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed top-0 left-0 h-full w-64 bg-background shadow-md z-50 p-4 rounded-lg"
+          >
+            <div className="space-y-1 flex flex-col h-[90vh] mt-8">
+              <h1 className="text-2xl font-bold mb-6 px-2">My Dashboard</h1>
+
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`cursor-pointer w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    activeTab === tab.id
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted"
+                  }`}
+                >
+                  <tab.icon className="w-4 h-4" />
+                  {tab.label}
+                </button>
+              ))}
+
+              <div className="mt-auto pt-4 border-t">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-destructive/10 text-destructive"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        <main className="flex-1 min-w-0">
+          {activeTab === "bio" && <BioManager />}
+          {activeTab === "projects" && <ProjectsManager />}
+          {activeTab === "skills" && <SkillsManager />}
+          {activeTab === "education" && <EducationManager />}
+          {activeTab === "experience" && <ExperienceManager />}
+          {activeTab === "testimonials" && <TestimonialsManager />}
+          {activeTab === "contact" && <ContactManager />}
+          {activeTab === "socials" && <SocialsManager />}
+          {activeTab === "blog" && <BlogManager />}
+          {activeTab === "comments" && <CommentsManager />}
+        </main>
+      </AnimatePresence>
     </div>
   );
 }

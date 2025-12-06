@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,6 +11,7 @@ const Header = () => {
   return (
     <div className="relative">
       <div className="absolute right-0 top-6">
+        <ThemeToggle />
         <button
           onClick={toggleMenu}
           aria-label={menuOpen ? "Close menu" : "Open menu"}

@@ -1,29 +1,13 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Laptop2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { ForwardRefExoticComponent, JSX } from "react";
-import {
-  faGraduationCap,
-  faLaptop,
-  faLaptopCode,
-  faList,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
-const volunteeringDetails = [
-  {
-    title: "Operations Team Member",
-    issuer: "SEES UNILAG",
-    date: "Oct 2025 - Present",
-    icon: faList,
-  },
-  {
-    title: "Frontend Instructor",
-    issuer: "Microsoft Learn Student Ambassadors (MLSA) UNILAG",
-    date: "Oct 2025 - Present",
-    icon: faGraduationCap,
-  },
-];
+import { faList, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { Database } from "@/types/supabase";
+
+type Experience = Database["public"]["Tables"]["experience"]["Row"];
+
 const VolunteeringCard = ({
   title,
   issuer,
@@ -61,12 +45,47 @@ const VolunteeringCard = ({
 };
 
 const Volunteering = () => {
+  const [volunteering, setVolunteering] = useState<Experience[]>([]);
+
+  useEffect(() => {
+    const fetchVolunteering = async () => {
+      const { data } = await supabase
+        .from("experience")
+        .select("*")
+        .eq("type", "volunteering")
+        .order("order_index", { ascending: true });
+
+      if (data) {
+        setVolunteering(data);
+      }
+    };
+    fetchVolunteering();
+  }, []);
+
+  if (volunteering.length === 0) return null;
+
   return (
     <div>
       <h1 className="mb-4 text-lg font-semibold">Volunteering</h1>
       <div className="space-y-4">
-        {volunteeringDetails.map((e, idx) => (
-          <VolunteeringCard {...e} key={idx} />
+        {volunteering.map((item) => (
+          <VolunteeringCard
+            key={item.id}
+            title={item.title}
+            issuer={item.organization}
+            date={`${new Date(item.start_date).toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            })} - ${
+              item.end_date
+                ? new Date(item.end_date).toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "Present"
+            }`}
+            icon={faList}
+          />
         ))}
       </div>
     </div>
