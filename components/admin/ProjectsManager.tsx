@@ -448,7 +448,7 @@ export default function ProjectsManager() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2 w-full max-sm:justify-evenly max-sm:pt-6">
+                <div className="flex gap-2 max-w-sm:w-full max-sm:justify-evenly max-sm:pt-6">
                   <button
                     onClick={() => startEdit(project)}
                     className="p-2 hover:bg-muted rounded-md text-blue-500"
