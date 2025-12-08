@@ -14,7 +14,7 @@ export function CustomToaster() {
           error: "bg-red-100 text-red-700 border-red-600",
           info: "bg-blue-100 text-blue-700 border-blue-600",
         },
-        //@ts-expect-error sonner types
+
         icons: {
           success: <CheckCircle2 className="w-5 h-5 text-white" />,
           error: <AlertCircle className="w-5 h-5 text-white" />,

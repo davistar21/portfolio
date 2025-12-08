@@ -86,7 +86,6 @@ const ImageUploader = ({
             className="flex w-full justify-center items-center gap-4"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* @ts-expect-error Next.js Image type mismatch */}
             <Image
               width={100}
               height={100}
