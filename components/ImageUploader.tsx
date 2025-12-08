@@ -17,13 +17,24 @@ export function formatSize(bytes: number): string {
 
 interface FileUploaderProps {
   onFileSelect?: (file: File | null) => void;
+  onFilesSelect?: (files: File[]) => void;
+  multiple?: boolean;
 }
 
-const ImageUploader = ({ onFileSelect }: FileUploaderProps) => {
+const ImageUploader = ({
+  onFileSelect,
+  onFilesSelect,
+  multiple = false,
+}: FileUploaderProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
+      if (multiple) {
+        onFilesSelect?.(acceptedFiles);
+        return;
+      }
+
       const file = acceptedFiles[0] || null;
       onFileSelect?.(file);
 
@@ -33,17 +44,17 @@ const ImageUploader = ({ onFileSelect }: FileUploaderProps) => {
         setPreviewUrl(url);
       }
     },
-    [onFileSelect]
+    [onFileSelect, onFilesSelect, multiple]
   );
 
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
     onDrop,
-    multiple: false,
+    multiple: multiple,
     accept: {
       "image/png": [".png"],
       "image/jpeg": [".jpg", ".jpeg"],
     },
-    maxSize: 5 * 1024 * 1024, // 20 MB
+    maxSize: 5 * 1024 * 1024, // 5 MB
   });
 
   const file = acceptedFiles[0] || null;
@@ -70,11 +81,12 @@ const ImageUploader = ({ onFileSelect }: FileUploaderProps) => {
     >
       <input {...getInputProps()} />
       <div className="space-y-4 cursor-pointer flex flex-col items-center text-center border-2 border-gray-500 rounded-lg py-6">
-        {file && previewUrl ? (
+        {!multiple && file && previewUrl ? (
           <div
             className="flex w-full justify-center items-center gap-4"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* @ts-expect-error Next.js Image type mismatch */}
             <Image
               width={100}
               height={100}
@@ -98,10 +110,12 @@ const ImageUploader = ({ onFileSelect }: FileUploaderProps) => {
               <Upload size={35} />
             </div>
             <p className="text-lg text-gray-300">
-              <span className="font-semibold">Click to upload</span> or drag and
-              drop
+              <span className="font-semibold">
+                Click to upload {multiple ? "files" : "file"}
+              </span>{" "}
+              or drag and drop
             </p>
-            <p className="text-lg text-gray-300">PNG or JPG (max 2MB)</p>
+            <p className="text-lg text-gray-300">PNG or JPG (max 5MB)</p>
           </div>
         )}
       </div>

@@ -22,14 +22,13 @@ export default function BioManager() {
   const fetchBio = async () => {
     // Fetch the first bio entry if it exists
     const { data, error } = await supabase.from("bio").select("*").limit(1);
-    console.log("Biodata, and error", data, error);
+
     setLoading(true);
 
     if (error) {
       toast.error("Failed to fetch bio: " + error.message);
     } else if (data && data.length > 0) {
       setBio(data[0]);
-      console.log("my biodata", data[0].profile_image_url);
     } else {
       // No bio exists yet, that's fine
       setBio(null);
@@ -56,6 +55,7 @@ export default function BioManager() {
     return (
       <div className="p-6 bg-card rounded-lg border shadow-sm">
         <h2 className="text-2xl font-bold mb-4">Bio Management</h2>
+
         <div className="flex flex-col gap-4">
           <div>
             Name
@@ -71,7 +71,7 @@ export default function BioManager() {
           </div>
           <div>
             Profile Image URL
-            <Skeleton className="w-full h-10" />
+            <Skeleton className="w-full h-32" />
           </div>
         </div>
       </div>
@@ -80,7 +80,19 @@ export default function BioManager() {
 
   return (
     <div className="p-6 bg-card rounded-lg border shadow-sm">
-      <h2 className="text-2xl font-bold mb-4">Bio Management</h2>
+      <div className="flex justify-between gap-2 items-center">
+        <h2 className="text-2xl font-bold mb-4">Bio Management</h2>
+
+        {bio?.profile_image_url && (
+          <div className="relative w-16 h-16 rounded-full overflow-hidden border">
+            <img
+              src={bio.profile_image_url}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+      </div>
       <form onSubmit={handleSave} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Name</label>
@@ -127,62 +139,52 @@ export default function BioManager() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium mb-2">
             Profile Image
           </label>
-          <div className="space-y-4">
-            {bio?.profile_image_url && (
-              <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
-                <img
-                  src={bio.profile_image_url}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            <ImageUploader
-              onFileSelect={async (file) => {
-                if (!file) return;
 
-                // Upload logic
-                const fileExt = file.name.split(".").pop();
-                const fileName = `bio-${
-                  crypto.randomUUID().split("-")[1]
-                }.${fileExt}`;
-                const filePath = `bio/${fileName}`;
+          <ImageUploader
+            onFileSelect={async (file) => {
+              if (!file) return;
 
-                const { error: uploadError } = await supabase.storage
-                  .from("portfolio-assets")
-                  .upload(filePath, file);
+              // Upload logic
+              const fileExt = file.name.split(".").pop();
+              const fileName = `bio-${
+                crypto.randomUUID().split("-")[1]
+              }.${fileExt}`;
+              const filePath = `bio/${fileName}`;
 
-                if (uploadError) {
-                  toast.error("Error uploading image: " + uploadError.message);
-                  return;
-                }
+              const { error: uploadError } = await supabase.storage
+                .from("portfolio-assets")
+                .upload(filePath, file);
 
-                const {
-                  data: { publicUrl },
-                } = supabase.storage
-                  .from("portfolio-assets")
-                  .getPublicUrl(filePath);
+              if (uploadError) {
+                toast.error("Error uploading image: " + uploadError.message);
+                return;
+              }
 
-                // Delete old image if exists
-                if (bio?.profile_image_url) {
-                  const oldUrl = bio.profile_image_url;
-                  if (oldUrl.includes("portfolio-assets")) {
-                    const oldPath = oldUrl.split("portfolio-assets/")[1];
-                    if (oldPath) {
-                      await supabase.storage
-                        .from("portfolio-assets")
-                        .remove([oldPath]);
-                    }
+              const {
+                data: { publicUrl },
+              } = supabase.storage
+                .from("portfolio-assets")
+                .getPublicUrl(filePath);
+
+              // Delete old image if exists
+              if (bio?.profile_image_url) {
+                const oldUrl = bio.profile_image_url;
+                if (oldUrl.includes("portfolio-assets")) {
+                  const oldPath = oldUrl.split("portfolio-assets/")[1];
+                  if (oldPath) {
+                    await supabase.storage
+                      .from("portfolio-assets")
+                      .remove([oldPath]);
                   }
                 }
+              }
 
-                setBio(bio ? { ...bio, profile_image_url: publicUrl } : null);
-              }}
-            />
-          </div>
+              setBio(bio ? { ...bio, profile_image_url: publicUrl } : null);
+            }}
+          />
         </div>
         <button
           type="submit"

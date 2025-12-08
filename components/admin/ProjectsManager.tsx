@@ -27,7 +27,7 @@ export default function ProjectsManager() {
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState<Partial<ProjectInsert>>({});
   const [currentImages, setCurrentImages] = useState<string[]>([]);
-
+  const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -61,7 +61,7 @@ export default function ProjectsManager() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsSaving(true);
     // Sync first image to main table for backward compatibility
     const mainImageUrl = currentImages.length > 0 ? currentImages[0] : null;
 
@@ -98,21 +98,7 @@ export default function ProjectsManager() {
       return;
     }
 
-    // Handle Image Saving.
-    // We only insert NEW images effectively. Or simplistic approach:
-    // User requirement: "Store the resulting public image URL in the appropriate image table".
-    // For simplicity in this "Replace text field" task, we will assume images in `currentImages` that are NOT already in DB need insertion?
-    // Actually, `currentImages` is just strings.
-    // If we are editing, we might have old images.
-    // Simplest robust logic:
-    // 1. We have `currentImages` (URLs).
-    // 2. We have `projectId`.
-    // 3. Insert all `currentImages` that satisfy the check?
-    // Better: Just insert ALL into `project_images`? No, duplicates.
-    // Since we are "Replacing text fields", and likely starting fresh for many, or appending.
-    // I made `currentImages` just a list of *newly uploaded* URLs + existing ones?
-    // Let's iterate `currentImages`. If it already exists in `editingProject.project_images`, skip. Else insert.
-
+    // Handle Images
     if (projectId && currentImages.length > 0) {
       const existingUrls = new Set(
         editingProject?.project_images?.map((img) => img.image_url) || []
@@ -136,6 +122,7 @@ export default function ProjectsManager() {
     toast.success("Project saved successfully");
     setEditingProject(null);
     setIsCreating(false);
+    setIsSaving(false);
     setFormData({});
     setCurrentImages([]);
     fetchProjects();
@@ -167,19 +154,6 @@ export default function ProjectsManager() {
     setIsCreating(true);
   };
 
-  const allObjs = {
-    startCreate,
-    setEditingProject,
-    editingProject,
-    isCreating,
-    setIsCreating,
-    handleSubmit,
-    formData,
-    setFormData,
-    currentImages,
-    setCurrentImages,
-  };
-
   if (loading)
     return (
       <div className="flex justify-center p-8">
@@ -188,220 +162,157 @@ export default function ProjectsManager() {
     );
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Projects</h2>
-        <AddProjectDialog {...allObjs} />
-      </div>
-
-      <div className="grid gap-4">
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            className="p-4 bg-card rounded-lg border shadow-sm flex justify-between items-start"
-          >
-            <div className="flex gap-4">
-              {project.project_images && project.project_images.length > 0 && (
-                <img
-                  src={project.project_images[0].image_url}
-                  alt={project.title}
-                  className="w-16 h-16 rounded object-cover border"
-                />
-              )}
-              <div>
-                <h3 className="text-lg font-semibold">{project.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {project.description}
-                </p>
-                <div className="flex gap-2 mt-2">
-                  {project.tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs px-2 py-1 bg-muted rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => startEdit(project)}
-                className="p-2 hover:bg-muted rounded-md text-blue-500"
-              >
-                <Pencil className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => handleDelete(project.id)}
-                className="p-2 hover:bg-muted rounded-md text-destructive"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
-        {projects.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            No projects found. Create one to get started.
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-interface ProjectDialogProps {
-  startCreate: () => void;
-  setEditingProject: (editingProject: Project | null) => void;
-  isCreating: boolean;
-  setIsCreating: (isCreating: boolean) => void;
-  handleSubmit: (e: React.FormEvent) => void;
-
-  formData: Partial<ProjectInsert>;
-  setFormData: React.Dispatch<React.SetStateAction<Partial<ProjectInsert>>>;
-
-  editingProject: Project | null;
-  currentImages: string[];
-  setCurrentImages: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-const AddProjectDialog = ({
-  startCreate,
-  setEditingProject,
-  editingProject,
-  isCreating,
-  setIsCreating,
-  handleSubmit,
-  formData,
-  setFormData,
-  currentImages,
-  setCurrentImages,
-}: ProjectDialogProps) => {
-  const isOpen = !!isCreating || !!editingProject;
-
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      setIsCreating(false);
-      setEditingProject(null);
-    }
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <button
-          onClick={startCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+    <AnimatePresence mode="popLayout">
+      {editingProject || isCreating ? (
+        <motion.div
+          key="form"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -40 }}
+          transition={{ duration: 0.2 }}
+          className="p-6 bg-card rounded-lg border shadow-sm"
         >
-          <Plus className="w-4 h-4" /> Add Project
-        </button>
-      </DialogTrigger>
-
-      <DialogContent className="h-[90vh] overflow-y-auto scrollbar sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            {editingProject ? "Edit Project" : "New Project"}
-          </DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input
-                type="text"
-                className="w-full p-2 rounded-md border bg-background"
-                value={formData.title || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Order Index
-              </label>
-              <input
-                type="number"
-                className="w-full p-2 rounded-md border bg-background"
-                value={formData.order_index || 0}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    order_index: parseInt(e.target.value),
-                  })
-                }
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">
-                Description (Markdown)
-              </label>
-              <textarea
-                className="w-full p-2 rounded-md border bg-background h-32"
-                value={formData.description || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    description: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Project URL
-              </label>
-              <input
-                type="text"
-                className="w-full p-2 rounded-md border bg-background"
-                value={formData.project_url || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    project_url: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                GitHub URL
-              </label>
-              <input
-                type="text"
-                className="w-full p-2 rounded-md border bg-background"
-                value={formData.github_url || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, github_url: e.target.value })
-                }
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">
-                Project Images
-              </label>
-              <div className="space-y-4">
-                {currentImages.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {currentImages.map((url, idx) => (
-                      <div
-                        key={idx}
-                        className="relative w-20 h-20 rounded-lg overflow-hidden border group"
-                      >
-                        <img
-                          src={url}
-                          alt="Project"
-                          className="w-full h-full object-cover"
-                        />
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">
+              {editingProject ? "Edit Project" : "New Project"}
+            </h2>
+            <button
+              onClick={() => {
+                setEditingProject(null);
+                setIsCreating(false);
+              }}
+              className="p-2 hover:bg-muted rounded-full"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Title</label>
+                <input
+                  type="text"
+                  className="w-full p-2 rounded-md border bg-background"
+                  value={formData.title || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Order Index
+                </label>
+                <input
+                  type="number"
+                  className="w-full p-2 rounded-md border bg-background"
+                  value={formData.order_index || 0}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      order_index: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-1">
+                  Description (Markdown)
+                </label>
+                <textarea
+                  className="w-full p-2 rounded-md border bg-background h-32"
+                  value={formData.description || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Project URL
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 rounded-md border bg-background"
+                  value={formData.project_url || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, project_url: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  GitHub URL
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 rounded-md border bg-background"
+                  value={formData.github_url || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, github_url: e.target.value })
+                  }
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-3">
+                  Project Images
+                </label>
+                <div className="space-y-4">
+                  <AnimatePresence mode="wait">
+                    {currentImages.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {currentImages.map((url, idx) => (
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.2 }}
+                            key={idx}
+                            className="relative w-24 h-24 rounded-lg overflow-hidden border group"
+                          >
+                            <img
+                              src={url}
+                              alt="Project"
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (url.includes("portfolio-assets")) {
+                                  const path =
+                                    url.split("portfolio-assets/")[1];
+                                  if (path) {
+                                    const { error } = await supabase.storage
+                                      .from("portfolio-assets")
+                                      .remove([path]);
+                                    if (error) {
+                                      toast.error(
+                                        "Failed to delete image file"
+                                      );
+                                      return;
+                                    }
+                                  }
+                                }
+                                setCurrentImages((prev) =>
+                                  prev.filter((u) => u !== url)
+                                );
+                              }}
+                              className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </motion.div>
+                        ))}
                       </div>
-                    ))}
-                    <ImageUploader
-                      onFileSelect={async (file) => {
-                        if (!file) return;
+                    )}
+                  </AnimatePresence>
+                  <ImageUploader
+                    multiple={true}
+                    onFilesSelect={async (files) => {
+                      if (!files || files.length === 0) return;
 
+                      const uploads = files.map(async (file) => {
                         const fileExt = file.name.split(".").pop();
                         const fileName = `project-${
                           crypto.randomUUID().split("-")[1]
@@ -416,7 +327,7 @@ const AddProjectDialog = ({
                           toast.error(
                             "Error uploading image: " + uploadError.message
                           );
-                          return;
+                          return null;
                         }
 
                         const {
@@ -425,13 +336,22 @@ const AddProjectDialog = ({
                           .from("portfolio-assets")
                           .getPublicUrl(filePath);
 
-                        setCurrentImages((prev) => [...prev, publicUrl]);
-                      }}
-                    />
-                  </div>
-                )}
+                        return publicUrl;
+                      });
+
+                      const results = await Promise.all(uploads);
+                      const successfulUploads = results.filter(
+                        (url): url is string => url !== null
+                      );
+                      setCurrentImages((prev) => [
+                        ...prev,
+                        ...successfulUploads,
+                      ]);
+                    }}
+                  />
+                </div>
               </div>
-              <div className="md:col-span-2">
+              <div>
                 <label className="block text-sm font-medium mb-1">
                   Tags (comma separated)
                 </label>
@@ -454,24 +374,104 @@ const AddProjectDialog = ({
                 />
               </div>
             </div>
-          </div>
-          <div className="flex justify-end gap-2 mt-6">
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingProject(null);
+                  setIsCreating(false);
+                }}
+                className="px-4 py-2 border rounded-md hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90  disabled:opacity-50"
+              >
+                {isSaving ? "Saving..." : "Save Project"}
+              </button>
+            </div>
+          </form>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="list"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -40 }}
+          transition={{ duration: 0.2 }}
+          className="space-y-6"
+        >
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Projects</h2>
             <button
-              type="button"
-              onClick={() => handleOpenChange(false)}
-              className="px-4 py-2 border rounded-md hover:bg-muted"
+              onClick={startCreate}
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-            >
-              Save Project
+              <Plus className="w-4 h-4" /> Add Project
             </button>
           </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+
+          <div className="grid gap-4">
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                className="p-4 bg-card rounded-lg border shadow-sm flex flex-col md:flex-row justify-between items-start max-sm:w-fit mx-auto"
+              >
+                <div className="flex gap-4 flex-col md:flex-row max-sm:max-w-xs">
+                  {project.project_images &&
+                    project.project_images.length > 0 && (
+                      <div className="w-full h-auto  md:w-16 md:h-16 rounded-lg overflow-hidden border shrink-0">
+                        <img
+                          src={project.project_images[0].image_url}
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                  <div>
+                    <h3 className="text-lg font-semibold">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {project.description}
+                    </p>
+                    <div className="flex gap-2 mt-2 overflow-x-auto py-4">
+                      {project.tags?.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs px-2 py-1 bg-muted rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 w-full max-sm:justify-evenly max-sm:pt-6">
+                  <button
+                    onClick={() => startEdit(project)}
+                    className="p-2 hover:bg-muted rounded-md text-blue-500"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(project.id)}
+                    className="p-2 hover:bg-muted rounded-md text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+            {projects.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground">
+                No projects found. Create one to get started.
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
-};
+}

@@ -30,6 +30,7 @@ const VolunteeringCard = ({
     >
       <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
         <div className="w-5 h-5 md:mt-0 mt-auto">
+          {/* @ts-expect-error FontAwesome type mismatch */}
           <FontAwesomeIcon icon={icon} />
         </div>
         <div className="flex flex-col justify-between mr-auto">
