@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Database } from "@/types/supabase";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import ImageUploader from "@/components/ImageUploader";
 
 type Bio = Database["public"]["Tables"]["bio"]["Row"];
 
@@ -28,6 +29,7 @@ export default function BioManager() {
       toast.error("Failed to fetch bio: " + error.message);
     } else if (data && data.length > 0) {
       setBio(data[0]);
+      console.log("my biodata", data[0].profile_image_url);
     } else {
       // No bio exists yet, that's fine
       setBio(null);
@@ -126,16 +128,61 @@ export default function BioManager() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">
-            Profile Image URL
+            Profile Image
           </label>
-          <input
-            type="text"
-            className="w-full p-2 rounded-md border bg-background"
-            value={bio?.profile_image_url || ""}
-            onChange={(e) =>
-              setBio(bio ? { ...bio, profile_image_url: e.target.value } : null)
-            }
-          />
+          <div className="space-y-4">
+            {bio?.profile_image_url && (
+              <div className="relative w-32 h-32 rounded-lg overflow-hidden border">
+                <img
+                  src={bio.profile_image_url}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <ImageUploader
+              onFileSelect={async (file) => {
+                if (!file) return;
+
+                // Upload logic
+                const fileExt = file.name.split(".").pop();
+                const fileName = `bio-${
+                  crypto.randomUUID().split("-")[1]
+                }.${fileExt}`;
+                const filePath = `bio/${fileName}`;
+
+                const { error: uploadError } = await supabase.storage
+                  .from("portfolio-assets")
+                  .upload(filePath, file);
+
+                if (uploadError) {
+                  toast.error("Error uploading image: " + uploadError.message);
+                  return;
+                }
+
+                const {
+                  data: { publicUrl },
+                } = supabase.storage
+                  .from("portfolio-assets")
+                  .getPublicUrl(filePath);
+
+                // Delete old image if exists
+                if (bio?.profile_image_url) {
+                  const oldUrl = bio.profile_image_url;
+                  if (oldUrl.includes("portfolio-assets")) {
+                    const oldPath = oldUrl.split("portfolio-assets/")[1];
+                    if (oldPath) {
+                      await supabase.storage
+                        .from("portfolio-assets")
+                        .remove([oldPath]);
+                    }
+                  }
+                }
+
+                setBio(bio ? { ...bio, profile_image_url: publicUrl } : null);
+              }}
+            />
+          </div>
         </div>
         <button
           type="submit"

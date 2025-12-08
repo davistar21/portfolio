@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/supabase";
 import { toast } from "sonner";
 import { Loader2, Plus, Pencil, Trash2, X } from "lucide-react";
+import ImageUploader from "@/components/ImageUploader";
 
 type Testimonial = Database["public"]["Tables"]["testimonials"]["Row"];
 type TestimonialInsert = Database["public"]["Tables"]["testimonials"]["Insert"];
@@ -155,17 +156,48 @@ export default function TestimonialsManager() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Image URL
-              </label>
-              <input
-                type="text"
-                className="w-full p-2 rounded-md border bg-background"
-                value={formData.image_url || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, image_url: e.target.value })
-                }
-              />
+              <label className="block text-sm font-medium mb-1">Image</label>
+              <div className="space-y-4">
+                {formData.image_url && (
+                  <div className="relative w-20 h-20 rounded-lg overflow-hidden border">
+                    <img
+                      src={formData.image_url}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <ImageUploader
+                  onFileSelect={async (file) => {
+                    if (!file) return;
+
+                    const fileExt = file.name.split(".").pop();
+                    const fileName = `testimonial-${
+                      crypto.randomUUID().split("-")[1]
+                    }.${fileExt}`;
+                    const filePath = `testimonial/${fileName}`;
+
+                    const { error: uploadError } = await supabase.storage
+                      .from("portfolio-assets")
+                      .upload(filePath, file);
+
+                    if (uploadError) {
+                      toast.error(
+                        "Error uploading image: " + uploadError.message
+                      );
+                      return;
+                    }
+
+                    const {
+                      data: { publicUrl },
+                    } = supabase.storage
+                      .from("portfolio-assets")
+                      .getPublicUrl(filePath);
+
+                    setFormData({ ...formData, image_url: publicUrl });
+                  }}
+                />
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">

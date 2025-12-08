@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 // import formatSize from "@/utils/formatSize";
 import Image from "next/image";
+import { Upload, UploadCloud, X } from "lucide-react";
 export function formatSize(bytes: number): string {
   if (bytes === 0) return "0 Bytes";
 
@@ -42,7 +43,7 @@ const ImageUploader = ({ onFileSelect }: FileUploaderProps) => {
       "image/png": [".png"],
       "image/jpeg": [".jpg", ".jpeg"],
     },
-    maxSize: 2 * 1024 * 1024, // 20 MB
+    maxSize: 5 * 1024 * 1024, // 20 MB
   });
 
   const file = acceptedFiles[0] || null;
@@ -63,12 +64,15 @@ const ImageUploader = ({ onFileSelect }: FileUploaderProps) => {
   };
 
   return (
-    <div {...getRootProps()} className="w-full gradient-border">
+    <div
+      {...getRootProps()}
+      className="w-full bg-gradient-to-br from-secondary/10 to-secondary/40 rounded-lg "
+    >
       <input {...getInputProps()} />
-      <div className="space-y-4 cursor-pointer flex flex-col items-center text-center">
+      <div className="space-y-4 cursor-pointer flex flex-col items-center text-center border-2 border-gray-500 rounded-lg py-6">
         {file && previewUrl ? (
           <div
-            className="uploader-selected-file"
+            className="flex w-full justify-center items-center gap-4"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
@@ -79,37 +83,25 @@ const ImageUploader = ({ onFileSelect }: FileUploaderProps) => {
               className="size-20 rounded border"
             />
             <div className="space-y-1 max-w-[60%]">
-              <p className="truncate text-gray-700 font-medium max-w-xs text-sm">
+              <p className="truncate text-gray-200 font-medium max-w-xs text-sm flex-1">
                 {file.name || "image"}
               </p>
-              <p className="text-sm text-gray-500">{formatSize(file.size)}</p>
+              <p className="text-sm text-gray-300">{formatSize(file.size)}</p>
             </div>
             <button className="p-2 cursor-pointer" onClick={handleRemove}>
-              <Image
-                width={20}
-                height={20}
-                src="/icons/cross.svg"
-                alt="Remove"
-                className="w-4 h-4"
-              />
+              <X size={20} />
             </button>
           </div>
         ) : (
           <div>
             <div className="mx-auto mb-2 w-16 h-16 flex items-center justify-center">
-              <Image
-                width={20}
-                height={20}
-                src="/icons/info.svg"
-                alt="upload"
-                className="size-20"
-              />
+              <Upload size={35} />
             </div>
-            <p className="text-lg text-gray-500">
+            <p className="text-lg text-gray-300">
               <span className="font-semibold">Click to upload</span> or drag and
               drop
             </p>
-            <p className="text-lg text-gray-500">PNG or JPG (max 2MB)</p>
+            <p className="text-lg text-gray-300">PNG or JPG (max 2MB)</p>
           </div>
         )}
       </div>

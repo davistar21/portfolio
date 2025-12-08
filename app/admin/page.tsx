@@ -39,8 +39,20 @@ export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("bio");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    } else {
+      setIsSidebarOpen(true);
+    }
+  }, [isMobile]);
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [activeTab]);
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -116,13 +128,39 @@ export default function AdminPage() {
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         className="fixed top-3 left-3 z-[9999] cursor-pointer"
       >
-        {isSidebarOpen ? (
-          <X className="w-6 h-6" />
-        ) : (
-          <Menu className="w-6 h-6" />
-        )}
+        <AnimatePresence mode="wait">
+          {isSidebarOpen ? (
+            <motion.div
+              initial={{ x: "-100%", opacity: 0 }}
+              animate={{ x: "0%", opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0 }}
+              transition={{ duration: 2.5, ease: "easeOut" }}
+            >
+              <X className="w-6 h-6" />
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: "0%", opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ duration: 2.5, ease: "easeOut" }}
+            >
+              <Menu className="w-6 h-6" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </button>
-
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="md:hidden block fixed z-[49] bg-black/50 inset-0"
+            onClick={() => setIsSidebarOpen(false)}
+          ></motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.aside

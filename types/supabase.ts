@@ -373,6 +373,58 @@ export interface Database {
           updated_at?: string;
         };
       };
+      project_images: {
+        Row: {
+          id: string;
+          project_id: string;
+          image_url: string;
+          alt_text: string | null;
+          order_index: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          project_id: string;
+          image_url: string;
+          alt_text?: string | null;
+          order_index?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          project_id?: string;
+          image_url?: string;
+          alt_text?: string | null;
+          order_index?: number;
+          created_at?: string;
+        };
+      };
+      blog_post_images: {
+        Row: {
+          id: string;
+          blog_post_id: string;
+          image_url: string;
+          alt_text: string | null;
+          order_index: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          blog_post_id: string;
+          image_url: string;
+          alt_text?: string | null;
+          order_index?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          blog_post_id?: string;
+          image_url?: string;
+          alt_text?: string | null;
+          order_index?: number;
+          created_at?: string;
+        };
+      };
     };
   };
 }
