@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/supabase";
 import { toast } from "sonner";
 import { Loader2, Mail, CheckCircle, XCircle } from "lucide-react";
-
+import { motion, AnimatePresence } from "framer-motion";
 type ContactMessage = Database["public"]["Tables"]["contact_messages"]["Row"];
 
 export default function ContactManager() {
@@ -32,6 +32,7 @@ export default function ContactManager() {
   };
 
   const toggleHandled = async (message: ContactMessage) => {
+    setLoading(true);
     const { error } = await supabase
       .from("contact_messages")
       .update({ handled: !message.handled })
@@ -43,13 +44,22 @@ export default function ContactManager() {
       toast.success("Message status updated");
       fetchMessages();
     }
+    setLoading(false);
   };
 
   if (loading)
     return (
-      <div className="flex justify-center p-8">
-        <Loader2 className="animate-spin" />
-      </div>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/20 z-48 flex flex-col items-center justify-center p-8 text-primary"
+        >
+          <Loader2 className="animate-spin" size={16} />
+          Loading...
+        </motion.div>
+      </AnimatePresence>
     );
 
   return (

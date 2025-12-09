@@ -26,11 +26,11 @@ export default function Footer() {
   return (
     <footer id="connect" className="pt-8 mt-8 space-y-4 px-4 md:px-8">
       <h1 className="text-lg font-semibold">Connect</h1>
-      <p className="text-gray-400">
+      <p className="text-muted-foreground">
         Feel free to contact me at{" "}
         <a
           href="mailto:eyitayobembe@gmail.com"
-          className="text-gray-200 hover:underline"
+          className="text-foreground hover:underline"
         >
           eyitayobembe@gmail.com
         </a>
@@ -43,14 +43,14 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <MouseFollowButton className="items-center  flex gap-[2px] bg-gray-800 shadow-md rounded-full px-2 md:px-3 py-[6px] text-sm text-gray-400  hover:bg-gray-800/90  hover:text-gray-200 transition-colors">
+            <MouseFollowButton className="items-center  flex gap-[2px] bg-gray-200 dark:bg-gray-800 shadow-md rounded-full px-2 md:px-3 py-[6px] text-sm text-gray-800 dark:text-gray-400  dark:hover:bg-gray-700/90  hover:bg-gray-300/90 transition-colors">
               {link.name} <ArrowUpRight size={16} className="rotate-5" />
             </MouseFollowButton>
           </a>
         ))}
       </div>
       <ContactForm />
-      <div className="text-sm text-gray-500 mt-4 border-t pt-4 pb-6 text-center flex gap-4 justify-around items-center">
+      <div className="text-sm text-muted-foreground mt-4 border-t pt-4 pb-6 text-center flex gap-4 justify-around items-center">
         <div>
           &copy; {new Date().getFullYear()} Obembe Eyitayo. All rights reserved.
         </div>
@@ -102,7 +102,7 @@ export function MouseFollowButton({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       disabled={disabled}
-      className={`transition-transform duration-300 ease-out cursor-pointer ${className}`}
+      className={`transition-transform transition-colors duration-300 ease-out cursor-pointer ${className}`}
       style={{ transform }}
     >
       {children || "Hover Me"}

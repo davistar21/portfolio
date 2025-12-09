@@ -14,6 +14,7 @@ import {
 } from "../ui/dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import ImageUploader from "@/components/ImageUploader";
+import { Skeleton } from "../ui/skeleton";
 
 type Project = Database["public"]["Tables"]["projects"]["Row"] & {
   project_images?: Database["public"]["Tables"]["project_images"]["Row"][];
@@ -27,6 +28,7 @@ export default function ProjectsManager() {
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState<Partial<ProjectInsert>>({});
   const [currentImages, setCurrentImages] = useState<string[]>([]);
+  const [tagsInput, setTagsInput] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     fetchProjects();
@@ -66,12 +68,16 @@ export default function ProjectsManager() {
     const mainImageUrl = currentImages.length > 0 ? currentImages[0] : null;
 
     const projectData = {
-      ...formData,
+      title: formData.title,
+      description: formData.description,
+      project_url: formData.project_url,
+      github_url: formData.github_url,
       image_url: mainImageUrl, // Update the main image_url column
-      tags:
-        typeof formData.tags === "string"
-          ? (formData.tags as string).split(",").map((t: string) => t.trim())
-          : formData.tags,
+      order_index: formData.order_index,
+      tags: tagsInput
+        .split(",")
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0),
     };
 
     let error;
@@ -132,10 +138,10 @@ export default function ProjectsManager() {
     setEditingProject(project);
     setFormData({
       ...project,
-      tags: project.tags ? project.tags : [],
     });
     // Load existing images into state
     setCurrentImages(project.project_images?.map((img) => img.image_url) || []);
+    setTagsInput(project.tags ? project.tags.join(", ") : "");
     setIsCreating(false);
   };
 
@@ -151,13 +157,37 @@ export default function ProjectsManager() {
       order_index: projects.length,
     });
     setCurrentImages([]);
+    setTagsInput("");
     setIsCreating(true);
   };
 
   if (loading)
     return (
-      <div className="flex justify-center p-8">
-        <Loader2 className="animate-spin" />
+      <div className="p-6 bg-card rounded-lg border shadow-sm">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Projects</h2>
+          <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+            <Plus className="w-4 h-4" /> Add Project
+          </button>
+        </div>
+        <div className="">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="p-4 bg-card rounded-lg border shadow-sm flex flex-col md:flex-row gap-4 w-full"
+            >
+              <div className="w-full h-48 md:w-16  md:h-16 rounded-lg overflow-hidden border shrink-0">
+                <Skeleton className="w-full h-full" />
+              </div>
+              <div className="w-full flex flex-col">
+                <Skeleton className="w-full h-2 mb-2" />
+                <Skeleton className="w-full h-2 mb-2" />
+                <Skeleton className="w-full h-2 mb-4" />
+                <Skeleton className="w-1/2 h-4" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
 
@@ -276,9 +306,32 @@ export default function ProjectsManager() {
                               alt="Project"
                               className="w-full h-full object-cover"
                             />
+
                             <button
                               type="button"
                               onClick={async () => {
+                                // 1. Check if image is in database
+                                const isSavedImage =
+                                  editingProject?.project_images?.some(
+                                    (img) => img.image_url === url
+                                  );
+
+                                if (isSavedImage) {
+                                  const { error: dbError } = await supabase
+                                    .from("project_images")
+                                    .delete()
+                                    .eq("image_url", url);
+
+                                  if (dbError) {
+                                    toast.error(
+                                      "Failed to delete image record"
+                                    );
+                                    console.error(dbError);
+                                    return;
+                                  }
+                                }
+
+                                // 2. Delete from storage if it's a hosted asset
                                 if (url.includes("portfolio-assets")) {
                                   const path =
                                     url.split("portfolio-assets/")[1];
@@ -358,19 +411,8 @@ export default function ProjectsManager() {
                 <input
                   type="text"
                   className="w-full p-2 rounded-md border bg-background"
-                  value={
-                    Array.isArray(formData.tags)
-                      ? formData.tags.join(", ")
-                      : formData.tags || ""
-                  }
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      tags: e.target.value
-                        .split(",")
-                        .map((t: string) => t.trim()),
-                    })
-                  }
+                  value={tagsInput}
+                  onChange={(e) => setTagsInput(e.target.value)}
                 />
               </div>
             </div>
@@ -418,12 +460,12 @@ export default function ProjectsManager() {
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="p-4 bg-card rounded-lg border shadow-sm flex flex-col md:flex-row justify-between items-start max-sm:w-fit mx-auto"
+                className="p-4 bg-card rounded-lg border shadow-sm flex flex-col md:flex-row justify-between items-start max-sm:w-fit mx-auto w-full"
               >
                 <div className="flex gap-4 flex-col md:flex-row max-sm:max-w-xs">
                   {project.project_images &&
                     project.project_images.length > 0 && (
-                      <div className="w-full h-auto  md:w-16 md:h-16 rounded-lg overflow-hidden border shrink-0">
+                      <div className="w-full h-auto md:w-16 md:h-16 rounded-lg overflow-hidden border shrink-0">
                         <img
                           src={project.project_images[0].image_url}
                           alt={project.title}

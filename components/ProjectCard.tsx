@@ -39,14 +39,14 @@ export default function ProjectCard({
         <div>
           <h3 className="font-semibold">{title}</h3>
 
-          <p className="text-sm text-gray-300/80 mt-1">{description}</p>
+          <p className="text-sm text-muted-foreground/80 mt-1">{description}</p>
         </div>
 
         <div className="overflow-x-auto scrollbar-hide md:scrollbar-custom whitespace-nowrap w-full mt-full pb-2 flex gap-2 min-w-full ">
           {tags?.map((tag, index) => (
             <span
               key={index}
-              className="text-gray-400 text-xs px-2 py-1 border rounded-full flex gap-2 items-center"
+              className="text-muted-foreground text-xs px-2 py-1 border rounded-full flex gap-2 items-center"
             >
               {tag}
             </span>

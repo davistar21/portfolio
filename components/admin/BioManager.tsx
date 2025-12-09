@@ -131,7 +131,7 @@ export default function BioManager() {
         <div>
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
-            className="w-full p-2 rounded-md border bg-background h-32"
+            className="w-full p-2 rounded-md border bg-background h-48 scrollbar"
             value={bio?.description || ""}
             onChange={(e) =>
               setBio(bio ? { ...bio, description: e.target.value } : null)

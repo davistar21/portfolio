@@ -37,7 +37,7 @@ const Header = () => {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.35, ease: "easeInOut" }}
-              className="overflow-hidden rounded-lg border border-gray-500 bg-gray-900/90 min-w-[180px]"
+              className="overflow-hidden rounded-lg border border-border bg-background/90 min-w-[180px]"
             >
               <motion.ul
                 initial="hidden"
@@ -64,7 +64,7 @@ const Header = () => {
                     <HeaderLink {...link} mobile />
                   </motion.li>
                 ))}
-                <div className="w-full h-px bg-gray-400"></div>
+                <div className="w-full h-px bg-border"></div>
                 <motion.li
                   variants={{
                     visible: { opacity: 1, y: 0 },
@@ -74,7 +74,7 @@ const Header = () => {
                 >
                   <Link
                     href="/#connect"
-                    className="text-gray-200 hover:text-gray-400 rounded-2xl text-center font-semibold transition-colors"
+                    className="text-foreground hover:text-muted-foreground rounded-2xl text-center font-semibold transition-colors"
                     onClick={() => setMenuOpen(false)}
                   >
                     Connect
@@ -109,7 +109,7 @@ const HeaderLink: React.FC<
   return (
     <a
       href={href}
-      className="group relative text-gray-200 hover:text-gray-400 rounded-2xl text-center font-semibold transition-colors"
+      className="group relative text-foreground hover:text-muted-foreground rounded-2xl text-center font-semibold transition-colors"
     >
       <AnimatePresence>
         {onPage && (
@@ -118,7 +118,7 @@ const HeaderLink: React.FC<
             animate={{ scaleX: 1 }}
             exit={{ scaleX: 0 }}
             transition={{ duration: 0.8 }}
-            className={`transition-colors absolute w-full h-px rounded-full bottom-0 left-0 bg-gray-200`}
+            className={`transition-colors absolute w-full h-px rounded-full bottom-0 left-0 bg-primary`}
           ></motion.div>
         )}
       </AnimatePresence>

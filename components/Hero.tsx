@@ -5,13 +5,18 @@ import { motion } from "framer-motion";
 const Hero = () => {
   return (
     <div className="flex flex-col">
-      <h1 className="text-xl font-semibold">Eyitayo Obembe</h1>
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="text-xl font-semibold"
+      >
+        Eyitayo Obembe
+      </motion.h1>
       <motion.h2
-        className="mb-8 text-gray-500"
-        initial={{
-          opacity: 0,
-          scale: 0.95,
-        }}
+        className="mb-8 text-muted-foreground"
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 1 }}
         viewport={{ once: true }}
@@ -26,9 +31,9 @@ const Hero = () => {
         ]}
       />
       <motion.p
-        className="mb-6 text-gray-400/80"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        className="mb-6 text-muted-foreground/80"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
         viewport={{ once: true }}
       >
@@ -37,9 +42,9 @@ const Hero = () => {
         smoothly and elevate your brand.
       </motion.p>
       <motion.p
-        className="mb-6 text-gray-400/80"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        className="mb-6 text-muted-foreground/80"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
         viewport={{ once: true }}
       >
@@ -47,7 +52,7 @@ const Hero = () => {
         user-focused experiences — from clean UI/UX to efficient backend
         systems. Let&rsquo;s{" "}
         <a
-          className="underline cursor-pointer hover:text-gray-300 transition-colors"
+          className="underline cursor-pointer hover:text-primary transition-colors"
           href="#connect"
         >
           connect

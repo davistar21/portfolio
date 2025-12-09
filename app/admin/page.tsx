@@ -35,12 +35,15 @@ import { AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+import ErrorComponent from "@/components/Error";
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("bio");
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const resetFn = () => window.location.reload();
   useEffect(() => {
     if (isMobile) {
       setIsSidebarOpen(false);
@@ -54,18 +57,47 @@ export default function AdminPage() {
     }
   }, [activeTab]);
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
+    const fetchSessionWithTimeout = async () => {
+      try {
+        // Create a timeout promise that rejects after 10 seconds
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => {
+            reject(
+              new Error(
+                "Network timeout: Failed to fetch session within 10 seconds."
+              )
+            );
+          }, 10000)
+        );
 
+        // Race the timeout promise against the Supabase session fetch
+        const sessionPromise = supabase.auth.getSession();
+
+        const {
+          data: { session },
+        } = await Promise.race([sessionPromise, timeoutPromise]);
+
+        setSession(session);
+        setLoading(false);
+      } catch (err: any) {
+        console.error("Error fetching session:", err);
+        setError(err);
+        setLoading(false);
+      }
+    };
+
+    fetchSessionWithTimeout();
+
+    // Subscribe to auth state changes as usual
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -80,7 +112,9 @@ export default function AdminPage() {
       </div>
     );
   }
-
+  if (error) {
+    return <ErrorComponent error={error} reset={resetFn} />;
+  }
   if (!session) {
     console.log("session", session);
     return <Login onLogin={() => {}} />;

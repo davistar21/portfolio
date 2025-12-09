@@ -28,7 +28,7 @@ const AchievementCard = ({
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.5 }}
       viewport={{ once: true }}
-      className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4"
+      className="border-1 border-border rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4"
     >
       <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
         <div className="w-5 h-5 md:mt-0 mt-auto">
@@ -36,15 +36,15 @@ const AchievementCard = ({
         </div>
         <div className="flex flex-col justify-between mr-auto">
           <span className="">{title}</span>
-          <p className=" text-gray-400">{issuer}</p>
+          <p className=" text-muted-foreground">{issuer}</p>
         </div>
       </div>
-      <div className="text-gray-400/80 flex md:flex-col md:items-end justify-between flex-row w-full">
+      <div className="text-muted-foreground/80 flex md:flex-col md:items-end justify-between flex-row w-full">
         <span>{date}</span>
 
         {href && (
           <a
-            className="text-sm flex gap-[2px] items-center !text-gray-500 hover:text-gray-200 transition"
+            className="text-sm flex gap-[2px] items-center !text-muted-foreground hover:text-foreground transition"
             href={href}
             target="_blank"
             rel="noopener noreferrer"

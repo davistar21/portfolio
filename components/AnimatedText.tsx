@@ -30,10 +30,10 @@ export default function AnimatedText({ words }: { words: string[] }) {
   }, [display, forward, index, words]);
 
   return (
-    <h1 className="text-gray-300/80 leading-tight">
+    <h1 className="text-muted-foreground leading-tight">
       <span>{display}</span>
       <span
-        className="inline-block w-[2px] bg-black dark:bg-white ml-2 animate-spin"
+        className="inline-block w-[2px] bg-foreground ml-2 animate-spin"
         style={{ height: "1.1em" }}
       />
     </h1>
