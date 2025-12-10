@@ -79,9 +79,9 @@ export default function AdminPage() {
 
         setSession(session);
         setLoading(false);
-      } catch (err: any) {
+      } catch (err) {
         console.error("Error fetching session:", err);
-        setError(err);
+        setError(err as Error);
         setLoading(false);
       }
     };
