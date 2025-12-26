@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -23,7 +23,6 @@ const Hero = () => {
       >
         Full Stack AI Engineer
       </motion.h2>
-
       <AnimatedText
         words={[
           "I build web experiences.",
@@ -59,29 +58,13 @@ const Hero = () => {
         </a>{" "}
         and build something great together.
       </motion.p>
-
-      {/* <div>
-        
-        <p className="mt-4 text-muted">
-          Frontend developer focusing on beautiful UI, performance, and
-          accessibility.
-        </p>
-        
-        <div className="mt-6 flex gap-4">
-          <a
-            className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-white"
-            href="/projects"
-          >
-            See projects
-          </a>
-          <a
-            className="inline-flex items-center px-4 py-2 rounded-md border"
-            href="/about"
-          >
-            About
-          </a>
-        </div>
-      </div> */}
+      {/* <div className="flex absolute overflow-hidden backdrop-blur-2xl right-0">
+        <div className="h-[20rem] z-2 w-[1rem] bg-linear-18 from-transparent via-[#ffffff] via-[99%] to-[#ffffff30] opacity-30"></div>
+        <div className="h-[20rem] z-2 w-[1rem] bg-linear-36 from-transparent via-[#ffffff] via-[99%] to-[#ffffff30] opacity-30"></div>
+        <div className="h-[20rem] z-2 w-[1rem] bg-linear-54 from-transparent via-[#ffffff] via-[99%] to-[#ffffff30] opacity-30"></div>
+        <div className="h-[20rem] z-2 w-[1rem] bg-linear-72 from-transparent via-[#ffffff] via-[99%] to-[#ffffff30] opacity-30"></div>
+        <div className="h-[20rem] z-2 w-[1rem] bg-linear-80 from-transparent via-[#ffffff] via-[99%] to-[#ffffff30] opacity-30"></div>
+      </div>{" "} */}
     </div>
   );
 };

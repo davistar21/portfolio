@@ -282,37 +282,34 @@ export interface Database {
           id: string;
           title: string;
           slug: string;
+          tagline: string | null;
           content: string | null;
           image_url: string | null;
           published_at: string | null;
           created_at: string;
           updated_at: string;
-          comments_count: number;
-          likes_count: number;
         };
         Insert: {
           id?: string;
           title: string;
           slug: string;
+          tagline?: string | null;
           content?: string | null;
           image_url?: string | null;
           published_at?: string | null;
           created_at?: string;
           updated_at?: string;
-          comments_count?: number;
-          likes_count?: number;
         };
         Update: {
           id?: string;
           title?: string;
           slug?: string;
+          tagline?: string | null;
           content?: string | null;
           image_url?: string | null;
           published_at?: string | null;
           created_at?: string;
           updated_at?: string;
-          comments_count?: number;
-          likes_count?: number;
         };
       };
       blog_comments: {

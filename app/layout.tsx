@@ -8,6 +8,7 @@ import { CustomToaster } from "@/components/CustomToaster";
 import ThemeToggle from "@/components/ThemeToggle";
 import Header from "@/components/Header";
 import MainLayout from "@/components/MainLayout";
+import Script from "next/script";
 
 export const metadata = {
   title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
@@ -87,6 +88,7 @@ export default function RootLayout({
         <MainLayout>
           <main>{children}</main>
         </MainLayout>
+        <Script src="https://js.puter.com/v2/"></Script>
         <Analytics />
       </body>
     </html>

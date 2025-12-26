@@ -36,6 +36,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ErrorComponent from "@/components/Error";
+
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +44,12 @@ export default function AdminPage() {
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const resetFn = () => window.location.reload();
+  const resetFn = () => {
+    if (window !== undefined) {
+      return window.location.reload();
+    } else return () => {};
+  };
+
   useEffect(() => {
     if (isMobile) {
       setIsSidebarOpen(false);
@@ -59,7 +65,6 @@ export default function AdminPage() {
   useEffect(() => {
     const fetchSessionWithTimeout = async () => {
       try {
-        // Create a timeout promise that rejects after 10 seconds
         const timeoutPromise = new Promise<never>((_, reject) =>
           setTimeout(() => {
             reject(
@@ -98,6 +103,27 @@ export default function AdminPage() {
     return () => {
       subscription.unsubscribe();
     };
+  }, []);
+  useEffect(() => {
+    // async function runAI() {
+    //   const res = await fetch("/api/generate", {
+    //     method: "POST",
+    //     body: JSON.stringify({ prompt: "What is love?" }),
+    //   });
+    //   if (!res.body) {
+    //     console.error("No response body");
+    //     return;
+    //   }
+    //   const reader = res.body.getReader();
+    //   const decoder = new TextDecoder();
+    //   while (true) {
+    //     const { value, done } =
+    //       (await reader.read()) as ReadableStreamReadResult<Uint8Array>;
+    //     if (done) break;
+    //     console.log(decoder.decode(value));
+    //   }
+    // }
+    // runAI();
   }, []);
 
   const handleLogout = async () => {
@@ -158,32 +184,27 @@ export default function AdminPage() {
 
   return (
     <div className="flex md:flex-row min-h-screen gap-6">
-      <button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed top-3 left-3 z-[9999] cursor-pointer"
-      >
-        <AnimatePresence mode="wait">
-          {isSidebarOpen ? (
-            <motion.div
-              initial={{ x: "-100%", opacity: 0 }}
-              animate={{ x: "0%", opacity: 1 }}
-              exit={{ x: "-100%", opacity: 0 }}
-              transition={{ duration: 2.5, ease: "easeOut" }}
-            >
+      <AnimatePresence mode="wait">
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="fixed top-3 left-3 z-[9999] cursor-pointer"
+        >
+          <motion.div
+            key={isSidebarOpen ? "open" : "closed"}
+            initial={{ x: "-10%", opacity: 0 }}
+            animate={{ x: "0%", opacity: 1 }}
+            exit={{ x: "-10%", opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            {isSidebarOpen ? (
               <X className="w-6 h-6" />
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ x: "100%", opacity: 0 }}
-              animate={{ x: "0%", opacity: 1 }}
-              exit={{ x: "100%", opacity: 0 }}
-              transition={{ duration: 2.5, ease: "easeOut" }}
-            >
+            ) : (
               <Menu className="w-6 h-6" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </button>
+            )}
+          </motion.div>
+        </button>
+      </AnimatePresence>
+
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.div
