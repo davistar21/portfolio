@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Loader2, Lock } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
-import { useAuthStore } from "@/lib/authStore";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Login({ onLogin }: { onLogin: () => void }) {
   const [email, setEmail] = useState("");

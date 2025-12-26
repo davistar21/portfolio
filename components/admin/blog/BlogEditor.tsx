@@ -2,12 +2,14 @@ import React, { useState, useRef } from "react";
 import { Database } from "@/types/supabase";
 import { toast } from "sonner";
 import { X, Edit, Eye, ImageIcon, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { chat } from "@/lib/chat"; // Import the Puter chat function
 import ImageUploader from "@/components/ImageUploader";
 import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
+import MarkdownImage from "@/components/blog/MarkdownImage";
 
 type BlogPostInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
 type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"] & {
@@ -33,6 +35,7 @@ export default function BlogEditor({
       content: "",
       image_url: "",
       published_at: new Date().toISOString(),
+      is_active: true,
     }
   );
   const [currentImages, setCurrentImages] = useState<string[]>(
@@ -40,8 +43,30 @@ export default function BlogEditor({
   );
   const [activeTab, setActiveTab] = useState<"write" | "preview">("write");
   const [isUploadingBodyImage, setIsUploadingBodyImage] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRefining, setIsRefining] = useState(false);
+  const [selection, setSelection] = useState<{
+    start: number;
+    end: number;
+    text: string;
+  } | null>(null);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Handle text selection to show the floating button
+  const handleSelection = () => {
+    if (textareaRef.current) {
+      const start = textareaRef.current.selectionStart;
+      const end = textareaRef.current.selectionEnd;
+      const text = textareaRef.current.value.substring(start, end);
+
+      if (text.trim().length > 0) {
+        setSelection({ start, end, text });
+      } else {
+        setSelection(null);
+      }
+    }
+  };
 
   const insertAtCursor = (text: string) => {
     if (textareaRef.current) {
@@ -101,41 +126,29 @@ export default function BlogEditor({
     }
   };
 
-  const handleRefine = async () => {
-    const currentContent = formData.content || "";
-    if (!currentContent.trim()) {
-      toast.error("Please write some content first!");
+  const handleRefine = async (isPartial = false) => {
+    const contentToRefine =
+      isPartial && selection ? selection.text : formData.content || "";
+
+    if (!contentToRefine.trim()) {
+      toast.error(
+        isPartial ? "Select text to refine!" : "Write content first!"
+      );
       return;
     }
 
     setIsRefining(true);
     try {
-      let textToRefine = currentContent;
-      let selectionStart = 0;
-      let selectionEnd = currentContent.length;
-
-      if (textareaRef.current) {
-        const start = textareaRef.current.selectionStart;
-        const end = textareaRef.current.selectionEnd;
-        if (start !== end) {
-          textToRefine = currentContent.substring(start, end);
-          selectionStart = start;
-          selectionEnd = end;
-        }
-      }
-
-      // Updated prompt to request JSON response as per user instruction and lib/chat requirements
+      // Prompt optimized for partial or full refinement
       const prompt = `
 You are a technical writing assistant.
 
-Refine the following Markdown blog content to improve clarity, flow, and impact, while preserving the author's personal developer journey and voice.
-
-Formatting rules (important):
-- Modify, if necessary, the existing heading hierarchy to improve readability (you can add or remove heading levels only where necessary).
-- Keep Markdown formatting clean and minimal.
-- Use bullet points, emphasis, or code blocks only where they naturally improve readability.
-- Do NOT add new sections, summaries, or conclusions, except where necessary.
-- Do NOT over-style or over-format the content, if it will not improve readability.
+Refine the following Markdown content to improve clarity, flow, and impact.
+${
+  isPartial
+    ? "This is a selected snippet from a larger post. Improve it in isolation but keep the tone consistent."
+    : "This is a full blog post."
+}
 
 Output rules:
 - Return ONLY a valid JSON object.
@@ -143,7 +156,7 @@ Output rules:
 - The value must be valid Markdown as a string.
 
 Content to refine:
-${textToRefine}
+${contentToRefine}
 `;
 
       const response = await chat(prompt);
@@ -151,16 +164,21 @@ ${textToRefine}
       if (response && response.refined_content) {
         const newText = response.refined_content;
 
-        if (selectionStart !== selectionEnd) {
+        if (isPartial && selection) {
+          // Replace only the selected range
+          const currentContent = formData.content || "";
           const updatedContent =
-            currentContent.substring(0, selectionStart) +
+            currentContent.substring(0, selection.start) +
             newText +
-            currentContent.substring(selectionEnd);
+            currentContent.substring(selection.end);
+
           setFormData({ ...formData, content: updatedContent });
+          setSelection(null); // Clear selection after replace
         } else {
+          // Replace all
           setFormData({ ...formData, content: newText });
         }
-        toast.success("Content refined successfully! ✨");
+        toast.success(isPartial ? "Selection refined! ✨" : "Post refined! ✨");
       } else {
         throw new Error("Invalid response format from AI");
       }
@@ -174,7 +192,9 @@ ${textToRefine}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     await onSubmit(formData, currentImages);
+    setIsSubmitting(false);
   };
 
   return (
@@ -184,7 +204,7 @@ ${textToRefine}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -40 }}
       transition={{ duration: 0.2 }}
-      className="p-6 bg-card rounded-lg border shadow-sm max-w-6xl mx-auto"
+      className="p-6 bg-card rounded-lg border shadow-sm max-w-6xl mx-auto relative"
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">
@@ -263,11 +283,64 @@ ${textToRefine}
                 }
               />
             </div>
+
+            <div className="flex items-center gap-3 pt-6">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={formData.is_active ?? true}
+                  onChange={(e) =>
+                    setFormData({ ...formData, is_active: e.target.checked })
+                  }
+                />
+                <div className="w-11 h-6 bg-muted peer-focus:outline-none ring-offset-background rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                <span className="ml-3 text-sm font-medium">
+                  {formData.is_active
+                    ? "Active (Visible)"
+                    : "Inactive (Hidden)"}
+                </span>
+              </label>
+            </div>
           </div>
         </div>
 
         {/* Editor Section */}
-        <div className="border rounded-lg overflow-hidden flex flex-col h-[600px] bg-background">
+        <div className="border rounded-lg overflow-hidden flex flex-col h-[600px] bg-background relative">
+          {/* Floating Refine Button (Partial) */}
+          <AnimatePresence>
+            {selection && activeTab === "write" && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2 bg-popover border shadow-xl rounded-full p-1.5 px-3 items-center"
+              >
+                <span className="text-xs text-muted-foreground mr-2 border-r pr-2">
+                  {selection.text.length} chars selected
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRefine(true)}
+                  disabled={isRefining}
+                  className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  <Sparkles
+                    size={12}
+                    className={isRefining ? "animate-spin" : ""}
+                  />
+                  {isRefining ? "Refining..." : "Refine Selection"}
+                </button>
+                <button
+                  onClick={() => setSelection(null)}
+                  className="ml-1 p-1 hover:bg-muted rounded-full text-muted-foreground"
+                >
+                  <X size={12} />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Toolbar */}
           <div className="border-b p-2 bg-muted/40 flex gap-2 items-center">
             <button
@@ -317,28 +390,34 @@ ${textToRefine}
               Markdown & GFM Supported
             </span>
 
-            <button
-              type="button"
-              onClick={handleRefine}
-              disabled={isRefining}
-              className={`
-                 flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-all
-                 bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md hover:shadow-lg
-                 disabled:opacity-70 disabled:cursor-not-allowed
-              `}
-            >
-              <Sparkles
-                size={14}
-                className={isRefining ? "animate-spin" : ""}
-              />
-              {isRefining ? "Refining..." : "Refine"}
-            </button>
+            {/* Global Refine Button - Only show if NO selection (to avoid confusion) */}
+            {!selection && (
+              <button
+                type="button"
+                onClick={() => handleRefine(false)}
+                disabled={isRefining}
+                className={`
+                    flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-all
+                    bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md hover:shadow-lg
+                    disabled:opacity-70 disabled:cursor-not-allowed
+                `}
+              >
+                <Sparkles
+                  size={14}
+                  className={isRefining ? "animate-spin" : ""}
+                />
+                {isRefining ? "Refining..." : "Refine All"}
+              </button>
+            )}
           </div>
 
           <div className="flex-1 w-full h-full relative overflow-hidden">
             {activeTab === "write" ? (
               <textarea
                 ref={textareaRef}
+                onSelect={handleSelection} // Capture selection events
+                onClick={handleSelection} // Redundant check to clear/update
+                onKeyUp={handleSelection} // Keyboard selection check
                 className="w-full h-full p-4 resize-none focus:outline-none font-mono text-sm leading-relaxed bg-background text-foreground"
                 placeholder="Start writing your story here... use Markdown!"
                 value={formData.content || ""}
@@ -348,11 +427,16 @@ ${textToRefine}
               />
             ) : (
               <div className="w-full h-full p-8 overflow-auto bg-white dark:bg-black/20">
-                <article className="prose dark:prose-invert max-w-none prose-img:rounded-lg prose-img:shadow-md">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {formData.content || "*Nothing to preview yet...*"}
+                <div className="prose prose-sm dark:prose-invert max-w-none border rounded-md p-6 min-h-[500px] bg-card">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      img: MarkdownImage,
+                    }}
+                  >
+                    {formData.content || "*No content yet*"}
                   </ReactMarkdown>
-                </article>
+                </div>
               </div>
             )}
           </div>
@@ -379,9 +463,51 @@ ${textToRefine}
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    setCurrentImages((prev) => prev.filter((u) => u !== url))
-                  }
+                  onClick={async () => {
+                    if (
+                      !confirm(
+                        "Are you sure you want to delete this image? This cannot be undone."
+                      )
+                    )
+                      return;
+
+                    try {
+                      // Extract path from URL
+                      // URL format: .../storage/v1/object/public/portfolio-assets/blog/filename.ext
+                      const path = url.split("portfolio-assets/")[1];
+                      if (!path) {
+                        // If we can't parse it, just remove from list to be safe
+                        setCurrentImages((prev) =>
+                          prev.filter((u) => u !== url)
+                        );
+                        return;
+                      }
+
+                      const { error: storageError } = await supabase.storage
+                        .from("portfolio-assets")
+                        .remove([path]);
+
+                      if (storageError) throw storageError;
+
+                      // Also remove from blog_post_images table if it exists there
+                      const { error: dbError } = await supabase
+                        .from("blog_post_images")
+                        .delete()
+                        .eq("image_url", url);
+
+                      if (dbError) {
+                        console.error("Error deleting from DB:", dbError);
+                        // We don't throw here strictly because the image might not be in DB yet (unsaved draft case)
+                        // but it's good to log.
+                      }
+
+                      setCurrentImages((prev) => prev.filter((u) => u !== url));
+                      toast.success("Image deleted permanently");
+                    } catch (error: any) {
+                      console.error("Error deleting image:", error);
+                      toast.error("Failed to delete image: " + error.message);
+                    }
+                  }}
                   className="absolute top-0 right-0 p-1 bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <X className="w-3 h-3" />
@@ -424,9 +550,12 @@ ${textToRefine}
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+            className={cn(
+              "px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90",
+              isSubmitting ? "opacity-50 cursor-wait pointer-events-none" : ""
+            )}
           >
-            Save Post
+            {isSubmitting ? "Saving..." : "Save Post"}
           </button>
         </div>
       </form>

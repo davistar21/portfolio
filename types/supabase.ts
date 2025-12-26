@@ -288,6 +288,7 @@ export interface Database {
           published_at: string | null;
           created_at: string;
           updated_at: string;
+          is_active: boolean | null;
         };
         Insert: {
           id?: string;
@@ -299,6 +300,7 @@ export interface Database {
           published_at?: string | null;
           created_at?: string;
           updated_at?: string;
+          is_active?: boolean | null;
         };
         Update: {
           id?: string;
@@ -310,6 +312,7 @@ export interface Database {
           published_at?: string | null;
           created_at?: string;
           updated_at?: string;
+          is_active?: boolean | null;
         };
       };
       blog_comments: {

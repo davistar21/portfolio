@@ -5,6 +5,7 @@ import { CustomToaster } from "./CustomToaster";
 import Footer from "./Footer";
 import Header from "./Header";
 import Providers from "./Providers";
+import ScrollToTop from "./ScrollToTop";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <main className="py-10 ">{children}</main>
         {!isAdminRoute && <Footer />}
       </div>
+      <ScrollToTop />
       <CustomToaster />
     </Providers>
   );
