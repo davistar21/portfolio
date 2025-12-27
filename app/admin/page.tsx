@@ -32,7 +32,6 @@ import {
 
 import { Session } from "@supabase/supabase-js";
 import { AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ErrorComponent from "@/components/Error";
@@ -61,7 +60,7 @@ export default function AdminPage() {
     if (isMobile) {
       setIsSidebarOpen(false);
     }
-  }, [activeTab]);
+  }, [activeTab, isMobile]);
   useEffect(() => {
     const fetchSessionWithTimeout = async () => {
       try {

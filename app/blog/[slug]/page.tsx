@@ -9,7 +9,6 @@ import remarkGfm from "remark-gfm";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Database } from "@/types/supabase";
-import Image from "next/image";
 import MarkdownImage from "@/components/blog/MarkdownImage";
 
 type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"] & {
@@ -18,9 +17,7 @@ type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"] & {
 
 export default function BlogPostPage() {
   const { slug } = useParams();
-  const router = useRouter();
-  const { posts, getPostBySlug, fetchPosts, isLoading, hasLoaded } =
-    useBlogStore();
+  const { getPostBySlug, fetchPosts, isLoading, hasLoaded } = useBlogStore();
   const [post, setPost] = useState<BlogPost | undefined>(undefined);
   const [isLocalLoading, setIsLocalLoading] = useState(true);
 

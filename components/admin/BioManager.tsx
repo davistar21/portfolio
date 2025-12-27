@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Database } from "@/types/supabase";
-import { Loader2 } from "lucide-react";
+import { Plus, Trash2, Save, X, ImageIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import ImageUploader from "@/components/ImageUploader";
 

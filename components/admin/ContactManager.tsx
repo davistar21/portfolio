@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/supabase";
 import { toast } from "sonner";
-import { Loader2, Mail, CheckCircle, XCircle } from "lucide-react";
+import { Loader2, Mail, CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 type ContactMessage = Database["public"]["Tables"]["contact_messages"]["Row"];
 

@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface MarkdownImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  node?: any; // react-markdown passes a node prop that we should accept but not pass to DOM
+  node?: unknown; // react-markdown passes a node prop that we should accept but not pass to DOM
 }
 
 export default function MarkdownImage({

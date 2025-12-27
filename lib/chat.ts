@@ -5,7 +5,7 @@ interface AIResponse {
 const puterChat = async (
   prompt: string | ChatMessage[],
   options?: PuterChatOptions
-): Promise<any> => {
+): Promise<unknown> => {
   // const puter = getPuter();
   const puter = window.puter;
   if (!puter) {

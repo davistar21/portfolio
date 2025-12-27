@@ -118,8 +118,10 @@ export default function BlogEditor({
 
       insertAtCursor(`\n\n![${file.name}](${publicUrl})\n\n`);
       toast.success("Image inserted!");
-    } catch (error: any) {
-      toast.error("Error upload image: " + error.message);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error upload image: " + errorMessage);
     } finally {
       setIsUploadingBodyImage(false);
       e.target.value = "";
@@ -182,9 +184,11 @@ ${contentToRefine}
       } else {
         throw new Error("Invalid response format from AI");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      toast.error("Refinement failed: " + error.message);
+      const errorMessage =
+        error instanceof Error ? error.message : "Active refinement failed";
+      toast.error("Refinement failed: " + errorMessage);
     } finally {
       setIsRefining(false);
     }
@@ -503,9 +507,13 @@ ${contentToRefine}
 
                       setCurrentImages((prev) => prev.filter((u) => u !== url));
                       toast.success("Image deleted permanently");
-                    } catch (error: any) {
+                    } catch (error: unknown) {
                       console.error("Error deleting image:", error);
-                      toast.error("Failed to delete image: " + error.message);
+                      const errorMessage =
+                        error instanceof Error
+                          ? error.message
+                          : "Failed to delete image";
+                      toast.error("Failed to delete image: " + errorMessage);
                     }
                   }}
                   className="absolute top-0 right-0 p-1 bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity"
