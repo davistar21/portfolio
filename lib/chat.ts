@@ -35,7 +35,7 @@ const puterChat = async (
   try {
     // Attempt to parse the content as JSON immediately
     return JSON.parse(content);
-  } catch (e) {
+  } catch (_e) {
     // If parsing fails, try to clean markdown triple backticks (a fallback)
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (jsonMatch) {

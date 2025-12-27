@@ -11,7 +11,7 @@ export default function MarkdownImage({
   src,
   alt,
   title,
-  node, // destructure node to prevent it from leaking into ...props if we used them (though currently we don't)
+  node: _node, // destructure node to prevent it from leaking into ...props if we used them (though currently we don't)
   ...props
 }: MarkdownImageProps) {
   if (!src) return null;

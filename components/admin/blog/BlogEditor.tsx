@@ -161,7 +161,7 @@ Content to refine:
 ${contentToRefine}
 `;
 
-      const response = await chat(prompt);
+      const response = (await chat(prompt)) as { refined_content: string };
 
       if (response && response.refined_content) {
         const newText = response.refined_content;

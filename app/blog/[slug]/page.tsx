@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useBlogStore } from "@/store/useBlogStore";
 import { Loader2, ArrowLeft, Calendar, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
