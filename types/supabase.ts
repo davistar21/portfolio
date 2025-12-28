@@ -42,6 +42,8 @@ export interface Database {
         Row: {
           id: string;
           title: string;
+          slug: string; // New field
+          is_featured: boolean; // New field
           description: string | null;
           project_url: string | null;
           github_url: string | null;
@@ -54,6 +56,8 @@ export interface Database {
         Insert: {
           id?: string;
           title: string;
+          slug: string; // New field
+          is_featured?: boolean; // New field
           description?: string | null;
           project_url?: string | null;
           github_url?: string | null;
@@ -66,6 +70,8 @@ export interface Database {
         Update: {
           id?: string;
           title?: string;
+          slug?: string; // New field
+          is_featured?: boolean; // New field
           description?: string | null;
           project_url?: string | null;
           github_url?: string | null;

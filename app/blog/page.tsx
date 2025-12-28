@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import BlogGrid from "@/components/blog/BlogGrid";
+import BlogGridSkeleton from "@/components/blog/BlogGridSkeleton";
 import { useBlogStore } from "@/store/useBlogStore";
 import { Loader2 } from "lucide-react";
 
@@ -13,9 +14,9 @@ export default function BlogPage() {
   }, [fetchPosts]);
 
   return (
-    <div className="container px-4 py-24 min-h-screen">
+    <div className="container px-4 py-14 min-h-screen">
       <div className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+        <h1 className="text-4xl md:text-5xl font-bold pb-4 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
           Thoughts & Stories
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
@@ -24,10 +25,7 @@ export default function BlogPage() {
       </div>
 
       {isLoading && !hasLoaded ? (
-        <div className="flex justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          Loading blog...
-        </div>
+        <BlogGridSkeleton />
       ) : (
         <BlogGrid posts={posts} />
       )}

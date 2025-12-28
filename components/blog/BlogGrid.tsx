@@ -25,14 +25,16 @@ export default function BlogGrid({ posts }: BlogGridProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(300px,auto)]">
       {posts.map((post, index) => {
         // Bento Logic:
-        // First item spans 2 cols if on desktop (lg)
-        // Every 4th item spans 2 cols
-        const isFeatured = index === 0;
-        const isWide = index % 4 === 0 && index !== 0;
+        // Use a repeating pattern of 7 items to create visual interest
+        // Index % 7 === 0: Wide (Spans 2 cols)
+        // Index % 7 === 3: Tall (Spans 2 rows)
+
+        const isWide = index % 7 === 0;
+        const isTall = index % 7 === 3;
 
         let spanClass = "";
-        if (isFeatured) spanClass = "lg:col-span-2 lg:row-span-2";
-        else if (isWide) spanClass = "md:col-span-2";
+        if (isWide) spanClass = "md:col-span-2";
+        else if (isTall) spanClass = "row-span-2";
 
         return <BlogCard key={post.id} post={post} className={spanClass} />;
       })}

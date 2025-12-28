@@ -16,17 +16,22 @@ export default function MarkdownImage({
 }: MarkdownImageProps) {
   if (!src) return null;
 
+  // Ensure alt/title are safe strings to prevent runtime errors on some browsers/devices
+  const safeAlt = typeof alt === "string" ? alt : "";
+  const safeTitle = typeof title === "string" ? title : "";
+
   // Pattern matching: Check alt text or title for directives
-  const isCard = alt?.includes("#card") || title?.includes("#card");
+  const isCard = safeAlt.includes("#card") || safeTitle.includes("#card");
   const isFloatLeft =
-    alt?.includes("#float-left") || title?.includes("#float-left");
+    safeAlt.includes("#float-left") || safeTitle.includes("#float-left");
   const isFloatRight =
-    alt?.includes("#float-right") || title?.includes("#float-right");
-  const isShowcase = alt?.includes("#showcase") || title?.includes("#showcase");
+    safeAlt.includes("#float-right") || safeTitle.includes("#float-right");
+  const isShowcase =
+    safeAlt.includes("#showcase") || safeTitle.includes("#showcase");
 
   // Clean the caption by removing the directive
-  const caption = alt
-    ?.replace(/#(card|float-left|float-right|showcase)/g, "")
+  const caption = safeAlt
+    .replace(/#(card|float-left|float-right|showcase)/g, "")
     .trim();
 
   // 1. CARD LAYOUT

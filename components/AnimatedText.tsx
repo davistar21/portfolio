@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
+import { motion } from "framer-motion";
 export default function AnimatedText({ words }: { words: string[] }) {
   const [index, setIndex] = useState(0);
   const [display, setDisplay] = useState("");
@@ -30,12 +30,18 @@ export default function AnimatedText({ words }: { words: string[] }) {
   }, [display, forward, index, words]);
 
   return (
-    <h1 className="text-muted-foreground leading-tight">
+    <motion.h1
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 2, duration: 0.6, ease: "easeInOut" }}
+      className="text-muted-foreground leading-tight"
+    >
       <span>{display}</span>
       <span
         className="inline-block w-[2px] bg-foreground ml-2 animate-spin"
         style={{ height: "1.1em" }}
       />
-    </h1>
+    </motion.h1>
   );
 }

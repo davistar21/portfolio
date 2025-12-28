@@ -11,7 +11,10 @@ import MainLayout from "@/components/MainLayout";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
+  title: {
+    template: "%s | Eyitayo Obembe",
+    default: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
+  },
 
   description:
     "Frontend Developer & Engineer — Building sleek, functional experiences with Next.js, TypeScript, and Tailwind.",

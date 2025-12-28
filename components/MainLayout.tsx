@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Providers from "./Providers";
 import ScrollToTop from "./ScrollToTop";
+import { cn } from "@/lib/utils";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -16,7 +17,14 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         {!isAdminRoute && <Header />}
         <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none " />
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none " />
-        <main className="py-10 ">{children}</main>
+        <main
+          className={cn(
+            "pb-10 transition-all",
+            isAdminRoute ? "pt-10" : "pt-14"
+          )}
+        >
+          {children}
+        </main>
         {!isAdminRoute && <Footer />}
       </div>
       <ScrollToTop />
