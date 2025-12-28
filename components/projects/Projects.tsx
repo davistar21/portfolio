@@ -103,14 +103,7 @@ const Projects = ({ preview = false }: { preview?: boolean }) => {
             Featured Projects
           </h2>
         )}
-        <div
-          className={cn(
-            "grid gap-6",
-            preview
-              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
-              : "grid-cols-1 md:grid-cols-2"
-          )}
-        >
+        <div className={cn("grid gap-6 grid-cols-1 md:grid-cols-2")}>
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}

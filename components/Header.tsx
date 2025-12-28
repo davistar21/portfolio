@@ -19,7 +19,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
+  const isMainRoute = pathname === "/";
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +47,7 @@ export default function Header() {
         )}
       >
         <div className="container px-4 md:px-6 mx-auto flex items-center justify-between">
-          <Logo />
+          {!isMainRoute && <Logo />}
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
