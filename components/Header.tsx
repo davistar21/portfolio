@@ -156,7 +156,7 @@ export default function Header() {
                     onClick={() => setIsOpen(false)}
                     className="px-8 py-4 bg-primary text-primary-foreground text-lg font-bold rounded-full w-full max-w-xs text-center shadow-lg active:scale-95 transition-transform"
                   >
-                    Let's Talk
+                    Let&apos;s Talk
                   </Link>
                 </motion.li>
               </motion.ul>
