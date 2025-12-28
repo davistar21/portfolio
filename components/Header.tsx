@@ -47,7 +47,7 @@ export default function Header() {
         )}
       >
         <div className="container px-4 md:px-6 mx-auto flex items-center justify-between">
-          {!isMainRoute && <Logo />}
+          {!isMainRoute ? <Logo /> : <div />}
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">

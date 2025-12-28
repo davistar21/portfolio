@@ -13,16 +13,16 @@ import MarkdownErrorBoundary from "@/components/MarkdownErrorBoundary";
 import Projects from "@/components/projects/Projects";
 
 export default function ProjectPage() {
-  // Use "id" instead of "slug" because the file path is [id]/page.tsx
-  const { id } = useParams() as { id: string };
+  // The file path is [slug]/page.tsx, so the param is named "slug"
+  const { slug } = useParams() as { slug: string };
   const router = useRouter();
   const { activeProject, fetchProjectById, isLoading } = useProjectsStore();
 
   useEffect(() => {
-    if (id) {
-      fetchProjectById(id);
+    if (slug) {
+      fetchProjectById(slug);
     }
-  }, [id, fetchProjectById]);
+  }, [slug, fetchProjectById]);
 
   if (isLoading || !activeProject) {
     return (
@@ -53,7 +53,7 @@ export default function ProjectPage() {
   return (
     <div className="min-h-screen pb-24">
       {/* Hero / Slideshow Section */}
-      <div className="relative h-[50vh] md:h-[60vh] w-full bg-muted overflow-hidden">
+      <div className="relative h-[50vh] md:h-[60vh] w-full bg-muted overflow-hidden rounded-lg">
         {heroImage && (
           <motion.div
             initial={{ scale: 1.1 }}
