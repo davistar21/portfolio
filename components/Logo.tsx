@@ -97,7 +97,8 @@ const Letter = ({
 
   return (
     <motion.span
-      variants={variants as any}
+      // @ts-expect-error next/line
+      variants={variants}
       className="font-bold text-2xl md:text-3xl tracking-tight relative cursor-pointer"
       style={{
         display: "inline-block",
