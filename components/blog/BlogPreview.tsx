@@ -6,9 +6,8 @@ import { useEffect, useMemo } from "react";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-interface ComponentProps {}
 
-const BlogPreview: React.FC<ComponentProps> = (props) => {
+const BlogPreview = () => {
   const { posts, isLoading, hasLoaded, fetchPosts } = useBlogStore();
   const pathname = usePathname();
 
