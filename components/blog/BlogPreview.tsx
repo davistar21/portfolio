@@ -37,7 +37,7 @@ const BlogPreview = () => {
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
-      {isLoading && !hasLoaded && posts.length > 0 && posts[randomPostIndex] ? (
+      {isLoading && !hasLoaded ? (
         <div
           className={`group relative overflow-hidden rounded-xl bg-card border shadow-sm flex flex-col`}
         >
@@ -63,8 +63,14 @@ const BlogPreview = () => {
             </div>
           </div>
         </div>
-      ) : (
+      ) : posts.length > 0 && posts[randomPostIndex] ? (
         <BlogCard post={posts[randomPostIndex]} />
+      ) : (
+        <div className="text-center py-20 border rounded-xl border-dashed">
+          <p className="text-muted-foreground">
+            No posts found. Check back soon!
+          </p>
+        </div>
       )}
     </div>
   );
