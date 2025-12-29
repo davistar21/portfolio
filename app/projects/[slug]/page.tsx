@@ -1,169 +1,136 @@
-"use client";
+import React from "react";
+import { supabase } from "@/lib/supabase";
+import { Metadata } from "next";
+import ProjectPageClient from "@/components/projects/ProjectPageClient";
+import { Database } from "@/types/supabase";
 
-import React, { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useProjectsStore } from "@/store/useProjectsStore";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Github, Globe } from "lucide-react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
-import MarkdownImage from "@/components/blog/MarkdownImage";
-import MarkdownErrorBoundary from "@/components/MarkdownErrorBoundary";
-import Projects from "@/components/projects/Projects";
+export const revalidate = 60; // Revalidate every 60 seconds
 
-export default function ProjectPage() {
-  // The file path is [slug]/page.tsx, so the param is named "slug"
-  const { slug } = useParams() as { slug: string };
-  const router = useRouter();
-  const { activeProject, fetchProjectById, isLoading } = useProjectsStore();
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-  useEffect(() => {
-    if (slug) {
-      fetchProjectById(slug);
+type Project = Database["public"]["Tables"]["projects"]["Row"] & {
+  project_images?: Database["public"]["Tables"]["project_images"]["Row"][];
+};
+
+// Helper function to fetch project by slug or ID
+// Helper function to fetch project by slug or ID
+async function getProject(slugOrId: string): Promise<Project | null> {
+  console.log("Fetching project for:", slugOrId);
+
+  // 1. Try fetching by slug first
+  const { data: slugData, error: slugError } = await supabase
+    .from("projects")
+    .select("*, project_images(*)")
+    .eq("slug", slugOrId)
+    .maybeSingle();
+
+  if (slugError) {
+    console.error("Slug fetch error:", slugError);
+  }
+
+  if (slugData) {
+    console.log("Found by slug");
+    return slugData as unknown as Project;
+  }
+
+  // DEBUG: If not found, list all slugs to see what's in DB
+  const { data: allProjects } = await supabase
+    .from("projects")
+    .select("slug, id");
+  console.log(
+    "DEBUG: Available slugs in DB:",
+    allProjects?.map((p) => ({ slug: p.slug, id: p.id }))
+  );
+
+  // 2. Fallback: Fetch by ID (ONLY if slugOrId looks like a UUID)
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  if (uuidRegex.test(slugOrId)) {
+    console.log("Input looks like UUID, trying ID fetch...");
+    const { data: idData, error: idError } = await supabase
+      .from("projects")
+      .select("*, project_images(*)")
+      .eq("id", slugOrId)
+      .maybeSingle();
+
+    if (idError) console.error("ID fetch error:", idError);
+    if (idData) {
+      console.log("Found by ID");
+      return idData as unknown as Project;
     }
-  }, [slug, fetchProjectById]);
+  } else {
+    console.log("Input is not a UUID, skipping ID fetch");
+  }
 
-  if (isLoading || !activeProject) {
+  console.log("Project not found for:", slugOrId);
+  return null;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await getProject(slug);
+
+  if (!project) {
+    return {
+      title: "Project Not Found",
+    };
+  }
+
+  const images =
+    project.project_images && project.project_images.length > 0
+      ? project.project_images.sort((a, b) => a.order_index - b.order_index)
+      : [];
+  const coverImage =
+    images.length > 0
+      ? images[0].image_url
+      : "https://eyitayobembe.vercel.app/og-image.png"; // Fallback
+
+  return {
+    title: `${project.title} | Projects`,
+    description:
+      project.description?.slice(0, 160) ||
+      "View this project in my portfolio.",
+    openGraph: {
+      title: project.title,
+      description: project.description?.slice(0, 160) || "",
+      type: "article", // or 'website'
+      images: [
+        {
+          url: coverImage,
+          width: 1200,
+          height: 630,
+          alt: project.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.description?.slice(0, 160) || "",
+      images: [coverImage],
+    },
+  };
+}
+
+export default async function ProjectPage({ params }: Props) {
+  const { slug } = await params;
+  const project = await getProject(slug);
+
+  if (!project) {
     return (
-      <div className="min-h-screen container px-4 py-24">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <Skeleton className="w-full h-[50vh] rounded-xl" />
-          <div className="flex gap-4">
-            <Skeleton className="w-32 h-10 rounded-md" />
-            <Skeleton className="w-32 h-10 rounded-md" />
-          </div>
-          <Skeleton className="w-3/4 h-12" />
-          <div className="space-y-4">
-            <Skeleton className="w-full h-4" />
-            <Skeleton className="w-full h-4" />
-            <Skeleton className="w-full h-4" />
-            <Skeleton className="w-2/3 h-4" />
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
+          <p className="text-muted-foreground">
+            The project you are looking for does not exist or has been removed.
+          </p>
         </div>
       </div>
     );
   }
 
-  // Use the sorted images from the store
-  const images = activeProject.project_images || [];
-  const heroImage = images.length > 0 ? images[0].image_url : null;
-  const galleryImages = images.length > 1 ? images.slice(1) : [];
-
-  return (
-    <div className="min-h-screen pb-24">
-      {/* Hero / Slideshow Section */}
-      <div className="relative h-[50vh] md:h-[60vh] w-full bg-muted overflow-hidden rounded-lg">
-        {heroImage && (
-          <motion.div
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="w-full h-full"
-          >
-            <img
-              src={heroImage}
-              alt={activeProject.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40" />
-          </motion.div>
-        )}
-
-        <div className="absolute top-24 left-0 w-full px-4 md:px-12 container mx-auto z-10">
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors bg-black/20 p-2 rounded-full backdrop-blur-sm"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Projects
-          </Link>
-        </div>
-
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 bg-gradient-to-t from-background to-transparent pt-32">
-          <div className="container mx-auto max-w-4xl">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-bold mb-4 text-foreground"
-            >
-              {activeProject.title}
-            </motion.h1>
-            <div className="flex flex-wrap gap-2 mb-6">
-              {activeProject.tags?.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium border border-primary/20 backdrop-blur-sm"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 max-w-4xl mt-8">
-        {/* Actions */}
-        <div className="flex flex-wrap gap-4 mb-12 border-b pb-8">
-          {activeProject.project_url && (
-            <a
-              href={activeProject.project_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-transform hover:-translate-y-0.5"
-            >
-              <Globe className="w-5 h-5" /> Visit Live App
-            </a>
-          )}
-          {activeProject.github_url && (
-            <a
-              href={activeProject.github_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 border bg-card hover:bg-muted rounded-lg font-medium transition-transform hover:-translate-y-0.5"
-            >
-              <Github className="w-5 h-5" /> View Source Code
-            </a>
-          )}
-        </div>
-
-        {/* Description */}
-        <div className="grid grid-cols-1 gap-12">
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <h2 className="text-2xl font-bold mb-4">About the Project</h2>
-            <MarkdownErrorBoundary>
-              <ReactMarkdown
-                components={{
-                  img: MarkdownImage,
-                }}
-              >
-                {activeProject.description || "No description provided."}
-              </ReactMarkdown>
-            </MarkdownErrorBoundary>
-          </div>
-
-          {/* Gallery (if extra images exist) */}
-          {galleryImages.length > 0 && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold">Gallery</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {galleryImages.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-xl overflow-hidden border shadow-sm group"
-                  >
-                    <img
-                      src={img.image_url}
-                      alt={img.alt_text || `Project image ${idx + 2}`}
-                      className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return <ProjectPageClient project={project} />;
 }

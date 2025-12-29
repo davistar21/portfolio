@@ -48,7 +48,7 @@ const Logo = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1 }}
         >
-          .
+          {/* . */}
         </motion.span>
       </motion.div>
     </Link>
