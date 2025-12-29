@@ -43,7 +43,7 @@ export default function Header() {
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
           scrolled || isOpen
             ? "bg-background/80 backdrop-blur-md border-border shadow-sm py-3"
-            : "bg-transparent py-5"
+            : "!bg-transparent py-5"
         )}
       >
         <div className="container px-4 md:px-6 mx-auto flex items-center justify-between">
@@ -110,7 +110,7 @@ export default function Header() {
             animate={{ opacity: 1, height: "100vh" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 z-40 bg-background pt-24 px-6 md:hidden overflow-hidden"
+            className="fixed inset-0 z-40 bg-background/80 pt-24 px-6 md:hidden overflow-hidden"
           >
             <nav className="flex flex-col gap-6 items-center">
               <motion.ul
@@ -125,24 +125,39 @@ export default function Header() {
                   },
                 }}
               >
-                {links.map((link) => (
-                  <motion.li
-                    key={link.href}
-                    variants={{
-                      visible: { opacity: 1, y: 0 },
-                      hidden: { opacity: 0, y: 20 },
-                    }}
-                    className="w-full text-center"
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className="block text-2xl font-bold py-2 hover:text-primary transition-colors"
+                {links.map((link) => {
+                  const isActive =
+                    pathname === link.href ||
+                    (link.href !== "/" && pathname.startsWith(link.href));
+
+                  return (
+                    <motion.li
+                      key={link.href}
+                      variants={{
+                        visible: { opacity: 1, y: 0 },
+                        hidden: { opacity: 0, y: 20 },
+                      }}
+                      className="w-full flex items-center justify-center"
                     >
-                      {link.name}
-                    </Link>
-                  </motion.li>
-                ))}
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "block text-2xl font-semibold py-2 hover:text-primary transition-colors relative w-fit",
+                          isActive ? "text-primary" : "text-muted-foreground"
+                        )}
+                      >
+                        {link.name}
+                        {isActive && (
+                          <motion.div
+                            layoutId="mobile-navbar-underline"
+                            className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                          />
+                        )}
+                      </Link>
+                    </motion.li>
+                  );
+                })}
 
                 <motion.li
                   variants={{
@@ -163,7 +178,8 @@ export default function Header() {
             </nav>
 
             {/* Background Decoration for Menu */}
-            <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-2/3 left-2/3 -translate-y-1/2 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
