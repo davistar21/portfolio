@@ -289,6 +289,14 @@ ${contentToRefine}
                   // remarkPlugins={[remarkGfm]} // Disabled for iOS
                   components={{
                     img: MarkdownImage,
+                    a: ({ node, ...props }) => (
+                      <a
+                        {...props}
+                        className="text-primary underline hover:text-primary/80"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    ),
                   }}
                 >
                   {content || "*No content yet*"}

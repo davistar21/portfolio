@@ -107,6 +107,14 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
               components={{
                 // Use our custom component for smart rendering
                 img: MarkdownImage,
+                a: ({ node, ...props }) => (
+                  <a
+                    {...props}
+                    className="text-primary underline hover:text-primary/80"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
               }}
             >
               {post.content || ""}

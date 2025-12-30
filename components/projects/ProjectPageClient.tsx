@@ -109,6 +109,14 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
               <ReactMarkdown
                 components={{
                   img: MarkdownImage,
+                  a: ({ node, ...props }) => (
+                    <a
+                      {...props}
+                      className="text-primary underline hover:text-primary/80"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  ),
                 }}
               >
                 {project.description || "No description provided."}
