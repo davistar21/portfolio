@@ -29,7 +29,7 @@ const ProjectList = ({
       transition={{ duration: 0.2 }}
       className="space-y-6"
     >
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center w-full">
         <h2 className="text-2xl font-bold">Projects</h2>
         <button
           onClick={onStartCreate}
@@ -60,7 +60,7 @@ const ProjectList = ({
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {project.description}
                 </p>
-                <div className="flex gap-2 mt-2 overflow-x-auto py-4">
+                <div className="flex flex-wrap gap-2 mt-2 overflow-x-auto py-4">
                   {project.tags?.map((tag) => (
                     <span
                       key={tag}

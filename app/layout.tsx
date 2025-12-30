@@ -67,25 +67,29 @@ export default function RootLayout({
           content="BOj-Y0MozoW4Rh9GLYuRmofJmLXW32SIz16D7h8DC9E"
         />
         <link rel="icon" href="/globe.svg" />
-        {/* <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Eyitayo",
-  "url": "https://eyitayo.dev",
-  "sameAs": [
-    "https://github.com/eyitayo",
-    "https://www.linkedin.com/in/eyitayo",
-    "https://twitter.com/eyitayo"
-  ],
-  "jobTitle": "Frontend Developer",
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Eyitayo Technologies"
-  },
-  "description": "A frontend developer specializing in React, Tailwind, and modern web apps."
-}
-</script> */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Eyitayo Obembe",
+              url: "https://eyitayobembe.vercel.app",
+              sameAs: [
+                "https://github.com/davistar21", // Update with actual
+                "https://www.linkedin.com/in/eyitayo-obembe", // Update with actual
+                "https://x.com/davistar21", // Update with actual
+              ],
+              jobTitle: "Frontend Developer",
+              worksFor: {
+                "@type": "Organization",
+                name: "Freelance / Open to Work",
+              },
+              description:
+                "A frontend developer specializing in React, Next.js, Tailwind, and modern web experiences.",
+            }),
+          }}
+        />
       </head>
       <body>
         <MainLayout>
