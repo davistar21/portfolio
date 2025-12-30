@@ -28,6 +28,7 @@ import {
   Loader2,
   Menu,
   X,
+  Home,
 } from "lucide-react";
 
 import { Session } from "@supabase/supabase-js";
@@ -35,6 +36,7 @@ import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ErrorComponent from "@/components/Error";
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
@@ -43,6 +45,7 @@ export default function AdminPage() {
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const router = useRouter();
   const resetFn = () => {
     if (window !== undefined) {
       return window.location.reload();
@@ -241,7 +244,15 @@ export default function AdminPage() {
                   {tab.label}
                 </button>
               ))}
-
+              <div className="mt-auto pt-4 border-t">
+                <button
+                  onClick={() => router.push("/")}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-primary"
+                >
+                  <Home className="w-4 h-4" />
+                  Home
+                </button>
+              </div>
               <div className="mt-auto pt-4 border-t">
                 <button
                   onClick={handleLogout}
