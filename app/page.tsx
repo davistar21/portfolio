@@ -10,7 +10,7 @@ import BlogPreview from "@/components/blog/BlogPreview";
 
 export default function HomePage() {
   return (
-    <section className="flex flex-col gap-24 mt-8 md:px-8 px-4 bg-background">
+    <section className="flex flex-col gap-24 mt-10 md:px-8 px-4 bg-background">
       <Hero />
       <Projects preview={true} />
       <BlogPreview />
