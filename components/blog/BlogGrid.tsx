@@ -38,6 +38,7 @@ export default function BlogGrid({ posts }: BlogGridProps) {
 
         return (
           <motion.div
+            key={post.id}
             whileHover={{ y: -5 }}
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -49,7 +50,7 @@ export default function BlogGrid({ posts }: BlogGridProps) {
             viewport={{ once: true }}
             className={spanClass}
           >
-            <BlogCard key={post.id} post={post} />
+            <BlogCard post={post} />
           </motion.div>
         );
       })}
