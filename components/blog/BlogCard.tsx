@@ -22,10 +22,6 @@ export default function BlogCard({ post, className = "" }: BlogCardProps) {
   return (
     <motion.div
       layout
-      whileHover={{ y: -5 }}
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
       className={`group relative overflow-hidden rounded-2xl bg-card border border-border shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full ${className}`}
     >
       <Link href={`/blog/${post.slug}`} className="absolute inset-0 z-10">

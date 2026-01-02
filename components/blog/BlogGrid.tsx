@@ -36,7 +36,22 @@ export default function BlogGrid({ posts }: BlogGridProps) {
         if (isWide) spanClass = "md:col-span-2";
         else if (isTall) spanClass = "row-span-2";
 
-        return <BlogCard key={post.id} post={post} className={spanClass} />;
+        return (
+          <motion.div
+            whileHover={{ y: -5 }}
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              ease: "easeInOut",
+              delay: index * 0.1,
+            }}
+            viewport={{ once: true }}
+            className={spanClass}
+          >
+            <BlogCard key={post.id} post={post} />
+          </motion.div>
+        );
       })}
     </div>
   );

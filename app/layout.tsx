@@ -13,24 +13,28 @@ import Script from "next/script";
 export const metadata = {
   title: {
     template: "%s | Eyitayo Obembe",
-    default: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
+    default: "Eyitayo Obembe | Fullstack AI Engineer",
   },
 
   description:
-    "Frontend Developer & Engineer — Building sleek, functional experiences with Next.js, TypeScript, and Tailwind.",
+    "Fullstack Developer & AI Engineer — Building sleek, functional experiences with Next.js, Node.js, Express.js, TypeScript, and Tailwind.",
   keywords: [
     "Eyitayo",
+    "Fullstack Developer",
     "Frontend Developer",
+    "Backend Developer",
     "Portfolio",
     "Next.js",
     "React",
+    "Node.js",
+    "Express.js",
     "TypeScript",
     "AWS Services",
   ],
   openGraph: {
-    title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
+    title: "Eyitayo Obembe | Fullstack AI Engineer",
     description:
-      "Frontend Developer & Engineer — Building sleek, functional experiences with Next.js, TypeScript, and Tailwind.",
+      "Fullstack Developer & AI Engineer — Building sleek, functional experiences with Next.js, Node.js, Express.js, TypeScript, and Tailwind.",
     url: "https://eyitayobembe.vercel.app",
     siteName: "Eyitayo Obembe Portfolio",
     images: [
@@ -46,9 +50,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eyitayo Obembe | Frontend Web Developer & AI Enthusiast",
+    title: "Eyitayo Obembe | Fullstack AI Engineer",
     description:
-      "Frontend Developer & Engineer — Building sleek, functional experiences with Next.js, TypeScript, and Tailwind.",
+      "Fullstack Developer & AI Engineer — Building sleek, functional experiences with Next.js, Node.js, Express.js, TypeScript, and Tailwind.",
     creator: "@yourTwitterHandle",
     images: ["https://eyitayobembe.vercel.app/og-image.png"],
   },
@@ -80,13 +84,13 @@ export default function RootLayout({
                 "https://www.linkedin.com/in/eyitayo-obembe", // Update with actual
                 "https://x.com/davistar21", // Update with actual
               ],
-              jobTitle: "Frontend Developer",
+              jobTitle: "Fullstack Developer",
               worksFor: {
                 "@type": "Organization",
                 name: "Freelance / Open to Work",
               },
               description:
-                "A frontend developer specializing in React, Next.js, Tailwind, and modern web experiences.",
+                "A fullstack developer specializing in React, Next.js, Node.js, Express.js, Tailwind, and modern web experiences.",
             }),
           }}
         />

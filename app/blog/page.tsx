@@ -5,6 +5,7 @@ import BlogGrid from "@/components/blog/BlogGrid";
 import BlogGridSkeleton from "@/components/blog/BlogGridSkeleton";
 import { useBlogStore } from "@/store/useBlogStore";
 import { Loader2 } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 
 export default function BlogPage() {
   const { posts, isLoading, fetchPosts, hasLoaded } = useBlogStore();
@@ -23,12 +24,13 @@ export default function BlogPage() {
           Exploring code, design, and the journey of building products.
         </p>
       </div>
-
-      {isLoading && !hasLoaded ? (
-        <BlogGridSkeleton />
-      ) : (
-        <BlogGrid posts={posts} />
-      )}
+      <AnimatePresence>
+        {isLoading && !hasLoaded ? (
+          <BlogGridSkeleton />
+        ) : (
+          <BlogGrid posts={posts} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

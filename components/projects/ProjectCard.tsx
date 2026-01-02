@@ -17,10 +17,6 @@ interface ProjectCardProps {
 const ProjectCard = ({ project, className }: ProjectCardProps) => {
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-all hover:shadow-lg h-full",
         className

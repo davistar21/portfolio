@@ -6,6 +6,7 @@ import { useEffect, useMemo } from "react";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const BlogPreview = () => {
   const { posts, isLoading, hasLoaded, fetchPosts } = useBlogStore();
@@ -37,41 +38,60 @@ const BlogPreview = () => {
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
-      {isLoading && !hasLoaded ? (
-        <div
-          className={`group relative overflow-hidden rounded-xl bg-card border shadow-sm flex flex-col`}
-        >
-          {/* Image Skeleton */}
-          <div className="relative w-full h-48 sm:h-56 overflow-hidden">
-            <Skeleton className="w-full h-full" />
-          </div>
-
-          {/* Content Skeleton */}
-          <div className="p-5 flex flex-col flex-1 gap-3">
-            <div className="flex gap-2 mb-1">
-              <Skeleton className="w-16 h-4 rounded-full" />
-              <Skeleton className="w-20 h-4 rounded-full" />
+      <AnimatePresence mode="wait">
+        {isLoading && !hasLoaded ? (
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            viewport={{ once: true }}
+            className={`group relative overflow-hidden rounded-xl bg-card border shadow-sm flex flex-col`}
+          >
+            {/* Image Skeleton */}
+            <div className="relative w-full h-48 sm:h-56 overflow-hidden">
+              <Skeleton className="w-full h-full" />
             </div>
 
-            <Skeleton className="w-3/4 h-8" />
-            <Skeleton className="w-full h-4" />
-            <Skeleton className="w-2/3 h-4" />
+            {/* Content Skeleton */}
+            <div className="p-5 flex flex-col flex-1 gap-3">
+              <div className="flex gap-2 mb-1">
+                <Skeleton className="w-16 h-4 rounded-full" />
+                <Skeleton className="w-20 h-4 rounded-full" />
+              </div>
 
-            <div className="mt-auto pt-4 flex items-center justify-between">
-              <Skeleton className="w-24 h-4" />
-              <Skeleton className="w-8 h-8 rounded-full" />
+              <Skeleton className="w-3/4 h-8" />
+              <Skeleton className="w-full h-4" />
+              <Skeleton className="w-2/3 h-4" />
+
+              <div className="mt-auto pt-4 flex items-center justify-between">
+                <Skeleton className="w-24 h-4" />
+                <Skeleton className="w-8 h-8 rounded-full" />
+              </div>
             </div>
-          </div>
-        </div>
-      ) : posts.length > 0 && posts[randomPostIndex] ? (
-        <BlogCard post={posts[randomPostIndex]} />
-      ) : (
-        <div className="text-center py-20 border rounded-xl border-dashed">
-          <p className="text-muted-foreground">
-            No posts found. Check back soon!
-          </p>
-        </div>
-      )}
+          </motion.div>
+        ) : posts.length > 0 && posts[randomPostIndex] ? (
+          <motion.div
+            whileHover={{ y: -5 }}
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            // viewport={{ once: true }}
+          >
+            <BlogCard post={posts[randomPostIndex]} />
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center py-20 border rounded-xl border-dashed"
+          >
+            <p className="text-muted-foreground">
+              No posts found. Check back soon!
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

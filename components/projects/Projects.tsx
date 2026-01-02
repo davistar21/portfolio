@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 /* 
   const projects = [
   {
@@ -167,11 +168,21 @@ const Projects = ({ preview = false }: { preview?: boolean }) => {
           }
 
           return (
-            <ProjectCard
+            <motion.div
               key={project.id}
-              project={project}
+              whileHover={{ y: -5 }}
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+                delay: index * 0.1,
+              }}
+              viewport={{ once: true }}
               className={spanClass}
-            />
+            >
+              <ProjectCard project={project} />
+            </motion.div>
           );
         })}
       </div>
