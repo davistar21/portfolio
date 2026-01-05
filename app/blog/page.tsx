@@ -1,18 +1,32 @@
-"use client";
-
-import React, { useEffect } from "react";
+import React from "react";
 import BlogGrid from "@/components/blog/BlogGrid";
-import BlogGridSkeleton from "@/components/blog/BlogGridSkeleton";
-import { useBlogStore } from "@/store/useBlogStore";
-import { Loader2 } from "lucide-react";
-import { AnimatePresence } from "framer-motion";
+import { supabase } from "@/lib/supabase";
+import { Database } from "@/types/supabase";
 
-export default function BlogPage() {
-  const { posts, isLoading, fetchPosts, hasLoaded } = useBlogStore();
+export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"] & {
+  blog_post_images?: Database["public"]["Tables"]["blog_post_images"]["Row"][];
+};
+
+async function getBlogPosts(): Promise<BlogPost[]> {
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*, blog_post_images(*)")
+    .eq("is_active", true) // Only published posts
+    .not("published_at", "is", null) // Ensure published_at is present
+    .order("published_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching blog posts:", error);
+    return [];
+  }
+
+  return data as unknown as BlogPost[];
+}
+
+export default async function BlogPage() {
+  const posts = await getBlogPosts();
 
   return (
     <div className="container px-4 py-14 min-h-screen">
@@ -24,13 +38,13 @@ export default function BlogPage() {
           Exploring code, design, and the journey of building products.
         </p>
       </div>
-      <AnimatePresence>
-        {isLoading && !hasLoaded ? (
-          <BlogGridSkeleton />
-        ) : (
-          <BlogGrid posts={posts} />
-        )}
-      </AnimatePresence>
+
+      {/* 
+        We pass the server-fetched posts directly to BlogGrid.
+        Client-side loading skeleton is no longer needed on initial load 
+        because logic is now server-first.
+      */}
+      <BlogGrid posts={posts} />
     </div>
   );
 }

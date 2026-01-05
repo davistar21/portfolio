@@ -74,24 +74,43 @@ import { motion } from "framer-motion";
     ],
   },
   */
-const Projects = ({ preview = false }: { preview?: boolean }) => {
+import { Database } from "@/types/supabase";
+
+type Project = Database["public"]["Tables"]["projects"]["Row"] & {
+  project_images?: Database["public"]["Tables"]["project_images"]["Row"][];
+};
+
+interface ProjectsProps {
+  preview?: boolean;
+  initialProjects?: Project[];
+}
+
+const Projects = ({ preview = false, initialProjects }: ProjectsProps) => {
   const {
-    projects,
+    projects: storeProjects,
     isLoading,
     hasLoaded,
     fetchProjects,
     fetchFeaturedProjects,
   } = useProjectsStore();
 
-  useEffect(() => {
-    if (preview) {
-      fetchFeaturedProjects();
-    } else {
-      fetchProjects();
-    }
-  }, [fetchProjects, fetchFeaturedProjects, preview]);
+  const projects = initialProjects || storeProjects;
+  // Only use loading state if we don't have initial data
+  const showLoading = !initialProjects && isLoading && !hasLoaded;
 
-  if (isLoading && !hasLoaded) {
+  useEffect(() => {
+    // If we have initialProjects, we don't strictly need to fetch,
+    // but if we want to keep the store in sync or if this is used elsewhere without props:
+    if (!initialProjects) {
+      if (preview) {
+        fetchFeaturedProjects();
+      } else {
+        fetchProjects();
+      }
+    }
+  }, [fetchProjects, fetchFeaturedProjects, preview, initialProjects]);
+
+  if (showLoading) {
     // ... skeleton logic derived from grid type
     return (
       <div className={cn(preview ? "py-12" : "py-6")} id="projects">
