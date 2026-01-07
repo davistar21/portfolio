@@ -39,7 +39,7 @@ export default function Footer() {
           eyitayobembe@gmail.com
         </a>
       </p>
-      <div className="flex gap-2 md:gap-4 mb-16">
+      <div className="flex flex-wrap gap-2 md:gap-4 mb-16">
         {links.map((link) => (
           <a
             key={link.name}
