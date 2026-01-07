@@ -11,8 +11,12 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { name: "Home", href: "/" },
-  { name: "Projects", href: "/projects" }, // Updated to direct route
+  { name: "Projects", href: "/projects" },
   { name: "Blog", href: "/blog" },
+  {
+    name: "Resume",
+    href: "https://drive.google.com/file/d/1Nl31fOdSejI0qLFFHuIjWP18H7-7pLen/view?usp=sharing",
+  },
 ];
 
 export default function Header() {
