@@ -13,6 +13,10 @@ export default function Footer() {
       href: "https://www.linkedin.com/in/eyitayo-obembe/",
     },
     {
+      name: "Twitter",
+      href: "https://x.com/davistar21",
+    },
+    {
       name: "Whatsapp",
       href:
         "https://wa.me/2348085716180?text=" +
