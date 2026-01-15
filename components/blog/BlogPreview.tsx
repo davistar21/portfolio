@@ -7,14 +7,33 @@ import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Database } from "@/types/supabase";
 
-const BlogPreview = () => {
-  const { posts, isLoading, hasLoaded, fetchPosts } = useBlogStore();
+type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"] & {
+  blog_post_images?: Database["public"]["Tables"]["blog_post_images"]["Row"][];
+};
+
+interface BlogPreviewProps {
+  initialPosts?: BlogPost[];
+}
+
+const BlogPreview = ({ initialPosts }: BlogPreviewProps) => {
+  const {
+    posts: storePosts,
+    isLoading,
+    hasLoaded,
+    fetchPosts,
+  } = useBlogStore();
   const pathname = usePathname();
 
+  const posts = initialPosts || storePosts;
+  const showLoading = !initialPosts && isLoading && !hasLoaded;
+
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    if (!initialPosts) {
+      fetchPosts();
+    }
+  }, [fetchPosts, initialPosts]);
   const randomPostIndex = useMemo(() => {
     const index = Math.floor(Math.random() * posts.length);
     return index;
@@ -39,7 +58,7 @@ const BlogPreview = () => {
         </Link>
       </div>
       <AnimatePresence mode="wait">
-        {isLoading && !hasLoaded ? (
+        {showLoading ? (
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}

@@ -42,7 +42,7 @@ export const metadata = {
         url: "https://eyitayobembe.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Eyitayo Portfolio Preview",
+        alt: "Eyitayo Obembe - Fullstack AI Engineer",
       },
     ],
     locale: "en_US",
@@ -53,7 +53,7 @@ export const metadata = {
     title: "Eyitayo Obembe | Fullstack AI Engineer",
     description:
       "Fullstack Developer & AI Engineer — Building sleek, functional experiences with Next.js, Node.js, Express.js, TypeScript, and Tailwind.",
-    creator: "@yourTwitterHandle",
+    creator: "@davistar21",
     images: ["https://eyitayobembe.vercel.app/og-image.png"],
   },
 };
@@ -70,7 +70,7 @@ export default function RootLayout({
           name="google-site-verification"
           content="BOj-Y0MozoW4Rh9GLYuRmofJmLXW32SIz16D7h8DC9E"
         />
-        <link rel="icon" href="/globe.svg" />
+        <link rel="icon" href="/me.jpg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
