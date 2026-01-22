@@ -51,7 +51,7 @@ export const puterChat = async (
   prompt: string | ChatMessage[],
   options?: PuterChatOptions,
 ): Promise<unknown> => {
-  // @ts-expect-error - Puter is loaded via script tag
+  
   const puter = typeof window !== "undefined" ? window.puter : null;
   if (!puter) {
     throw new Error("Puter.js not available for chat.");
