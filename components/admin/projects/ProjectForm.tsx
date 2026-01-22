@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/supabase";
+import { useAdminDraft } from "@/hooks/useLocalStorageState";
 
 import ProjectMetaForm from "./ProjectMetaForm";
 import ProjectImageManager from "./ProjectImageManager";
@@ -25,36 +26,39 @@ const ProjectForm = ({
   onClose,
   onSuccess,
 }: ProjectFormProps) => {
-  const [formData, setFormData] = useState<Partial<ProjectInsert>>({});
-  const [currentImages, setCurrentImages] = useState<string[]>([]);
-  const [tagsInput, setTagsInput] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
+  // Use localStorage-backed state for draft persistence
+  const [formData, setFormData, clearFormDraft] = useAdminDraft<
+    Partial<ProjectInsert>
+  >(
+    "project",
+    editingProject?.id,
+    editingProject || {
+      title: "",
+      slug: "",
+      is_featured: false,
+      description: "",
+      project_url: "",
+      github_url: "",
+      image_url: "",
+      tags: [],
+    },
+  );
 
-  useEffect(() => {
-    if (editingProject) {
-      setFormData({ ...editingProject });
-      setCurrentImages(
-        editingProject.project_images?.map((img) => img.image_url) || []
-      );
-      setTagsInput(editingProject.tags ? editingProject.tags.join(", ") : "");
-    } else {
-      // Initialize for new project if needed? Parent likely passed null for new.
-      setFormData({
-        title: "",
-        slug: "",
-        is_featured: false,
-        description: "",
-        project_url: "",
-        github_url: "",
-        image_url: "",
-        tags: [],
-        // order_index: projects.length, // Passed logic? Or parent handles default? Let's leave undefined or set 0.
-        // Better if parent passes default values or we fetch max index here. Simpler to just default 0 or let user set.
-      });
-      setCurrentImages([]);
-      setTagsInput("");
-    }
-  }, [editingProject]);
+  const [currentImages, setCurrentImages, clearImagesDraft] = useAdminDraft<
+    string[]
+  >(
+    "project",
+    editingProject?.id ? `${editingProject.id}-images` : "new-images",
+    editingProject?.project_images?.map((img) => img.image_url) || [],
+  );
+
+  const [tagsInput, setTagsInput, clearTagsDraft] = useAdminDraft<string>(
+    "project",
+    editingProject?.id ? `${editingProject.id}-tags` : "new-tags",
+    editingProject?.tags ? editingProject.tags.join(", ") : "",
+  );
+
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,28 +106,50 @@ const ProjectForm = ({
       return;
     }
 
-    // Handle Images
+    // Handle Images - sync order for ALL images
     if (projectId && currentImages.length > 0) {
-      const existingUrls = new Set(
-        editingProject?.project_images?.map((img) => img.image_url) || []
+      const existingImageMap = new Map(
+        editingProject?.project_images?.map((img) => [img.image_url, img.id]) ||
+          [],
       );
-      const newImages = currentImages.filter((url) => !existingUrls.has(url));
 
-      if (newImages.length > 0) {
-        const { error: imgError } = await supabase
-          .from("project_images")
-          .insert(
-            newImages.map((url, idx) => ({
-              project_id: projectId!,
+      // Process each image in order
+      for (let idx = 0; idx < currentImages.length; idx++) {
+        const url = currentImages[idx];
+        const existingId = existingImageMap.get(url);
+
+        if (existingId) {
+          // Update order_index for existing image
+          const { error: updateError } = await supabase
+            .from("project_images")
+            .update({ order_index: idx })
+            .eq("id", existingId);
+
+          if (updateError) {
+            console.error("Failed to update image order:", updateError);
+          }
+        } else {
+          // Insert new image with correct order_index
+          const { error: insertError } = await supabase
+            .from("project_images")
+            .insert({
+              project_id: projectId,
               image_url: url,
               order_index: idx,
-            }))
-          );
-        if (imgError) toast.error("Failed to save images: " + imgError.message);
+            });
+
+          if (insertError) {
+            toast.error("Failed to save image: " + insertError.message);
+          }
+        }
       }
     }
 
     toast.success("Project saved successfully");
+    // Clear drafts on successful save
+    clearFormDraft();
+    clearImagesDraft();
+    clearTagsDraft();
     setIsSaving(false);
     onSuccess(); // Triggers refresh and close in parent
   };
@@ -156,6 +182,7 @@ const ProjectForm = ({
         <ProjectDescriptionEditor
           formData={formData}
           setFormData={setFormData}
+          projectId={editingProject?.id}
         />
 
         <ProjectImageManager

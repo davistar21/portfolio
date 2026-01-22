@@ -37,11 +37,15 @@ import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ErrorComponent from "@/components/Error";
 import { useRouter } from "next/navigation";
+import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("bio");
+  const [activeTab, setActiveTab, clearStorage] = useLocalStorageState(
+    "activeTab",
+    "bio",
+  );
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -71,10 +75,10 @@ export default function AdminPage() {
           setTimeout(() => {
             reject(
               new Error(
-                "Network timeout: Failed to fetch session within 10 seconds."
-              )
+                "Network timeout: Failed to fetch session within 10 seconds.",
+              ),
             );
-          }, 10000)
+          }, 10000),
         );
 
         // Race the timeout promise against the Supabase session fetch

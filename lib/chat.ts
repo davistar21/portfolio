@@ -1,18 +1,62 @@
-interface AIResponse {
+// Client-safe chat utility - calls API route instead of Groq SDK directly
+
+interface ChatOptions {
+  model?: string;
+  temperature?: number;
+  maxTokens?: number;
+}
+
+interface ChatMessage {
+  role: "user" | "assistant" | "system";
+  content: string;
+}
+
+/**
+ * Send a chat prompt to the AI via API route.
+ * This is safe to use from both client and server components.
+ */
+export const chat = async (
+  prompt: string | ChatMessage[],
+  options?: ChatOptions,
+): Promise<unknown> => {
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ prompt, options }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `API error: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+// ============================================
+// PUTER IMPLEMENTATION (Legacy/Fallback)
+// ============================================
+interface PuterAIResponse {
   message: { content: string | { type: string; text: string }[] };
 }
 
-const puterChat = async (
+interface PuterChatOptions {
+  model?: string;
+  responseMimeType?: string;
+}
+
+export const puterChat = async (
   prompt: string | ChatMessage[],
-  options?: PuterChatOptions
+  options?: PuterChatOptions,
 ): Promise<unknown> => {
-  // const puter = getPuter();
-  const puter = window.puter;
+  // @ts-expect-error - Puter is loaded via script tag
+  const puter = typeof window !== "undefined" ? window.puter : null;
   if (!puter) {
     throw new Error("Puter.js not available for chat.");
   }
 
-  // We explicitly request JSON format for all study set generation parts
   const defaultOptions = {
     model: options?.model || "claude-3-7-sonnet-latest",
     responseMimeType: "application/json",
@@ -21,30 +65,25 @@ const puterChat = async (
   const response = (await puter.ai.chat(prompt, undefined, undefined, {
     ...defaultOptions,
     ...options,
-  })) as AIResponse | undefined;
+  })) as PuterAIResponse | undefined;
 
   if (!response || !response.message.content) {
     throw new Error("AI returned an invalid or empty response.");
   }
 
-  // Extract content, assuming the LLM returns a clean JSON string if responseMimeType is set.
   const content = Array.isArray(response.message.content)
     ? response.message.content[0]?.text || ""
     : response.message.content;
-  console.log(content);
+
+  console.log("Puter response:", content);
+
   try {
-    // Attempt to parse the content as JSON immediately
     return JSON.parse(content);
   } catch (_e) {
-    // If parsing fails, try to clean markdown triple backticks (a fallback)
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }
     throw new Error("AI response was not valid JSON.");
   }
-};
-
-export const chat = async (prompt: string, options?: PuterChatOptions) => {
-  return puterChat(prompt, options);
 };

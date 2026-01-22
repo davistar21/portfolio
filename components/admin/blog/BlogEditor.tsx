@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import BlogMetaForm from "./BlogMetaForm";
 import BlogImageManager from "./BlogImageManager";
 import BlogMarkdownEditor from "./BlogMarkdownEditor";
+import { useAdminDraft } from "@/hooks/useLocalStorageState";
 
 type BlogPostInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
 type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"] & {
@@ -23,7 +24,12 @@ export default function BlogEditor({
   onSubmit,
   onCancel,
 }: BlogEditorProps) {
-  const [formData, setFormData] = useState<Partial<BlogPostInsert>>(
+  // Use localStorage-backed state for draft persistence
+  const [formData, setFormData, clearFormDraft] = useAdminDraft<
+    Partial<BlogPostInsert>
+  >(
+    "blog",
+    initialData?.id,
     initialData || {
       title: "",
       slug: "",
@@ -32,17 +38,26 @@ export default function BlogEditor({
       image_url: "",
       published_at: new Date().toISOString(),
       is_active: true,
-    }
+    },
   );
-  const [currentImages, setCurrentImages] = useState<string[]>(
-    initialData?.blog_post_images?.map((img) => img.image_url) || []
+
+  const [currentImages, setCurrentImages, clearImagesDraft] = useAdminDraft<
+    string[]
+  >(
+    "blog",
+    initialData?.id ? `${initialData.id}-images` : "new-images",
+    initialData?.blog_post_images?.map((img) => img.image_url) || [],
   );
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     await onSubmit(formData, currentImages);
+    // Clear drafts on successful save
+    clearFormDraft();
+    clearImagesDraft();
     setIsSubmitting(false);
   };
 
@@ -98,7 +113,7 @@ export default function BlogEditor({
             type="submit"
             className={cn(
               "px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90",
-              isSubmitting ? "opacity-50 cursor-wait pointer-events-none" : ""
+              isSubmitting ? "opacity-50 cursor-wait pointer-events-none" : "",
             )}
           >
             {isSubmitting ? "Saving..." : "Save Post"}

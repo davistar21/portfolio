@@ -6,6 +6,7 @@ import { Database } from "@/types/supabase";
 import { toast } from "sonner";
 import { Loader2, Plus, Pencil, Trash2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAdminDraft } from "@/hooks/useLocalStorageState";
 
 type Experience = Database["public"]["Tables"]["experience"]["Row"];
 type ExperienceInsert = Database["public"]["Tables"]["experience"]["Insert"];
@@ -15,7 +16,12 @@ export default function ExperienceManager() {
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<Experience | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [formData, setFormData] = useState<Partial<ExperienceInsert>>({});
+
+  // Use localStorage-backed state for draft persistence
+  const [formData, setFormData, clearFormDraft] = useAdminDraft<
+    Partial<ExperienceInsert>
+  >("experience", editingItem?.id, {});
+
   const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     fetchExperience();
@@ -81,6 +87,7 @@ export default function ExperienceManager() {
       toast.error("Failed to save experience: " + error.message);
     } else {
       toast.success("Experience saved successfully");
+      clearFormDraft(); // Clear localStorage draft
       setEditingItem(null);
       setIsCreating(false);
       setFormData({});

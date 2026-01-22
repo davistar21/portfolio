@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/supabase";
 import { toast } from "sonner";
 import { Loader2, Plus, Pencil, Trash2, X } from "lucide-react";
+import { useAdminDraft } from "@/hooks/useLocalStorageState";
 
 type Education = Database["public"]["Tables"]["education"]["Row"];
 type EducationInsert = Database["public"]["Tables"]["education"]["Insert"];
@@ -14,7 +15,11 @@ export default function EducationManager() {
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<Education | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [formData, setFormData] = useState<Partial<EducationInsert>>({});
+
+  // Use localStorage-backed state for draft persistence
+  const [formData, setFormData, clearFormDraft] = useAdminDraft<
+    Partial<EducationInsert>
+  >("education", editingItem?.id, {});
 
   useEffect(() => {
     fetchEducation();
@@ -69,6 +74,7 @@ export default function EducationManager() {
       toast.error("Failed to save education: " + error.message);
     } else {
       toast.success("Education saved successfully");
+      clearFormDraft(); // Clear localStorage draft
       setEditingItem(null);
       setIsCreating(false);
       setFormData({});

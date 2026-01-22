@@ -57,7 +57,7 @@ const ProjectList = ({
               )}
               <div>
                 <h3 className="text-lg font-semibold">{project.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
+                <p className="text-sm text-muted-foreground line-clamp-2 max-w-xl">
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-2 overflow-x-auto py-4">
