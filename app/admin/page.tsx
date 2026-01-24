@@ -13,6 +13,7 @@ import ContactManager from "@/components/admin/ContactManager";
 import SocialsManager from "@/components/admin/SocialsManager";
 import BlogManager from "@/components/admin/BlogManager";
 import CommentsManager from "@/components/admin/CommentsManager";
+import AcademicsManager from "@/components/admin/academics/AcademicsManager";
 import {
   User,
   Briefcase,
@@ -29,6 +30,7 @@ import {
   Menu,
   X,
   Home,
+  BarChart3,
 } from "lucide-react";
 
 import { Session } from "@supabase/supabase-js";
@@ -186,6 +188,7 @@ export default function AdminPage() {
     { id: "socials", label: "Socials", icon: Share2 },
     { id: "blog", label: "Blog", icon: FileText },
     { id: "comments", label: "Comments", icon: MessageCircle },
+    { id: "academics", label: "Academics", icon: BarChart3 },
   ];
 
   return (
@@ -283,6 +286,7 @@ export default function AdminPage() {
           {activeTab === "socials" && <SocialsManager />}
           {activeTab === "blog" && <BlogManager />}
           {activeTab === "comments" && <CommentsManager />}
+          {activeTab === "academics" && <AcademicsManager />}
         </main>
       </AnimatePresence>
     </div>
