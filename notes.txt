@@ -1,241 +1,877 @@
-"use client";
-import { motion } from "framer-motion";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLaptop,
-  faGraduationCap,
-  faCertificate,
-  IconDefinition,
-  faTrophy,
-} from "@fortawesome/free-solid-svg-icons";
-import { ArrowUpRight, Trophy, TrophyIcon } from "lucide-react";
-
-const achievementDetails = [
-  {
-    title: "1st Place, AWS Cloud User Security Group Hackathon 2025",
-    issuer: "AWS Cloud User Security Group",
-    date: "October 11, 2025",
-    icon: faTrophy,
-    href: "https://www.linkedin.com/feed/update/urn:li:activity:7383116434765201408/",
-  },
-];
-
-const AchievementCard = ({
-  title,
-  issuer,
-  date,
-  icon,
-  href,
-}: {
-  title: string;
-  issuer: string;
-  date: string;
-  icon: IconDefinition;
-  href?: string;
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.6, delay: 0.5 }}
-      viewport={{ once: true }}
-      className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4"
-    >
-      <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
-        <div className="w-5 h-5 md:mt-0 mt-auto">
-          <FontAwesomeIcon icon={icon} />
-        </div>
-        <div className="flex flex-col justify-between mr-auto">
-          <span className="">{title}</span>
-          <p className=" text-gray-400">{issuer}</p>
-        </div>
-      </div>
-      <div className="text-gray-400/80 flex md:flex-col md:items-end justify-between flex-row w-full">
-        <span>{date}</span>
-
-        {href && (
-          <a
-            className="text-sm flex gap-[2px] items-center !text-gray-500 hover:text-gray-200 transition"
-            href={href}
-          >
-            View
-            <ArrowUpRight size={16} />
-          </a>
-        )}
-      </div>
-    </motion.div>
-  );
-};
-const Achievements = () => {
-  return (
-    <div>
-      <h1 className="mb-4 text-lg font-semibold">Achievements</h1>
-      <div className="space-y-4">
-        {achievementDetails.map((e, idx) => (
-          <AchievementCard {...e} key={idx} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default Achievements;
-
-"use client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Laptop2 } from "lucide-react";
-import { motion } from "framer-motion";
-import { ForwardRefExoticComponent, JSX } from "react";
-import {
-  faLaptop,
-  faLaptopCode,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
-const workExperienceDetails = [
-  {
-    title: "Frontend Developer ",
-    issuer: "Engineering Career Expo",
-    date: "Nov 2025 - Present",
-    icon: faLaptopCode,
-  },
-  {
-    title: "Freelancer",
-    issuer: "Upwork",
-    date: "Sep 2025 - Present",
-    icon: faLaptop,
-  },
-  {
-    title: "Frontend Developer Intern",
-    issuer: "Sphiderass Web Ltd.",
-    date: "Sep 2024 - Dec 2024",
-    icon: faLaptopCode,
-  },
-];
-const WorkExperienceCard = ({
-  title,
-  issuer,
-  date,
-  icon,
-}: {
-  title: string;
-  issuer: string;
-  date: string;
-  icon: IconDefinition;
-  certificate?: string;
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true }}
-      className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4 items-start"
-    >
-      <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
-        <div className="w-5 h-5 md:mt-0 mt-auto">
-          <FontAwesomeIcon icon={icon} />
-        </div>
-        <div className="flex flex-col justify-between mr-auto">
-          <span className="!m-0">{title}</span>
-          <p className=" text-gray-400">{issuer}</p>
-        </div>
-      </div>
-      <div className="text-gray-400/80 flex md:flex-col md:items-end justify-between flex-row w-full">
-        <span>{date}</span>
-      </div>
-    </motion.div>
-  );
-};
-
-const WorkExperience = () => {
-  return (
-    <div>
-      <h1 className="mb-4 text-lg font-semibold">Work Experience</h1>
-      <div className="space-y-4">
-        {workExperienceDetails.map((e, idx) => (
-          <WorkExperienceCard {...e} key={idx} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default WorkExperience;
-
-
-"use client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Laptop2 } from "lucide-react";
-import { motion } from "framer-motion";
-import { ForwardRefExoticComponent, JSX } from "react";
-import {
-  faGraduationCap,
-  faLaptop,
-  faLaptopCode,
-  faList,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
-const volunteeringDetails = [
-  {
-    title: "Operations Team Member",
-    issuer: "SEES UNILAG",
-    date: "Oct 2025 - Present",
-    icon: faList,
-  },
-  {
-    title: "Frontend Instructor",
-    issuer: "Microsoft Learn Student Ambassadors (MLSA) UNILAG",
-    date: "Oct 2025 - Present",
-    icon: faGraduationCap,
-  },
-];
-const VolunteeringCard = ({
-  title,
-  issuer,
-  date,
-  icon,
-}: {
-  title: string;
-  issuer: string;
-  date: string;
-  icon: IconDefinition;
-  certificate?: string;
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true }}
-      className="border-1 border-gray-500/50 rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4 items-start"
-    >
-      <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
-        <div className="w-5 h-5 md:mt-0 mt-auto">
-          <FontAwesomeIcon icon={icon} />
-        </div>
-        <div className="flex flex-col justify-between mr-auto">
-          <span className="!m-0">{title}</span>
-          <p className=" text-gray-400">{issuer}</p>
-        </div>
-      </div>
-      <div className="text-gray-400/80 flex md:flex-col md:items-end justify-between flex-row w-full">
-        <span>{date}</span>
-      </div>
-    </motion.div>
-  );
-};
-
-const Volunteering = () => {
-  return (
-    <div>
-      <h1 className="mb-4 text-lg font-semibold">Volunteering</h1>
-      <div className="space-y-4">
-        {volunteeringDetails.map((e, idx) => (
-          <VolunteeringCard {...e} key={idx} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default Volunteering;
+{
+    "courses": [
+        {
+            "code": "GST 102",
+            "title": "Philosophy, Logic and Philosophy of Science",
+            "units": 2,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GST 105",
+            "title": "Use of English",
+            "units": 2,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 115",
+            "title": "Engineering Algebra I",
+            "units": 2,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 117",
+            "title": "Engineering Calculus I",
+            "units": 2,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 113",
+            "title": "Engineering Applied Mathematics I",
+            "units": 3,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "FSC 112",
+            "title": "Introductory Chemistry I",
+            "units": 3,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "FSC 115",
+            "title": "Introductory Physics I",
+            "units": 3,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "MEG 111",
+            "title": "Workshop Practice I",
+            "units": 1,
+            "semester_id": "100-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 124",
+            "title": "Engineering Applied Mathematics II",
+            "units": 3,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 126",
+            "title": "Engineering Algebra II",
+            "units": 2,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 128",
+            "title": "Engineering Calculus II",
+            "units": 2,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "PHS 121",
+            "title": "Introductory Physics II",
+            "units": 3,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "PHS 122",
+            "title": "Introductory Physics III",
+            "units": 3,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "PHS 123",
+            "title": "Introductory Practical Physics",
+            "units": 2,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "MEG 121",
+            "title": "Workshop Practice II",
+            "units": 1,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GST 103",
+            "title": "Nigerian Peoples and Cultures",
+            "units": 2,
+            "semester_id": "100-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GST 201",
+            "title": "General African Studies",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 217",
+            "title": "Engineering Calculus III",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 219",
+            "title": "Ordinary Differential Equations",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 211",
+            "title": "Fundamentals of Electrical Engineering I",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 213",
+            "title": "Signals & Systems Theory",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "MEG 211",
+            "title": "Engineering Drawing",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "MEG 214",
+            "title": "Engineering Mechanics I: Statics",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 215",
+            "title": "Electrical Engineering Materials",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 217",
+            "title": "Electrical System Graphics",
+            "units": 2,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CEG 211",
+            "title": "Mechanics of Materials I",
+            "units": 3,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 231",
+            "title": "Fundamentals of Electrical Engineering I Lab",
+            "units": 1,
+            "semester_id": "200-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 222",
+            "title": "Introduction Engineering Statistics",
+            "units": 3,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 228",
+            "title": "Engineering in Society",
+            "units": 1,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 221",
+            "title": "Computer Programming I",
+            "units": 2,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 220",
+            "title": "Fund. of Electrical Engineering II Lab",
+            "units": 1,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 222",
+            "title": "Fund. of Electrical Engineering II",
+            "units": 2,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 224",
+            "title": "Intro. to Switching & Logic Systems",
+            "units": 2,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 226",
+            "title": "Physical Electronics",
+            "units": 2,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "MEG 222",
+            "title": "Fundamentals Fluids Mechanics",
+            "units": 2,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "MEG 224",
+            "title": "Engineering Mechanics II: Dynamics",
+            "units": 2,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CEG 221",
+            "title": "Mechanics of Materials II",
+            "units": 2,
+            "semester_id": "200-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "SIW 200",
+            "title": "SIWES I",
+            "units": 3,
+            "semester_id": "200-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GST 307",
+            "title": "Entrepreneurship & Corporate Governance",
+            "units": 2,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 311",
+            "title": "Calculus of Several Variables",
+            "units": 3,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 311",
+            "title": "Computer Programming II",
+            "units": 2,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 319",
+            "title": "Circuits & Systems I",
+            "units": 2,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 331",
+            "title": "Electronic Circuits I",
+            "units": 2,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 317",
+            "title": "Instrumentation & Measurement I",
+            "units": 2,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 335",
+            "title": "Electronics Circuits Lab I",
+            "units": 1,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 313",
+            "title": "Computer Organization and Architecture",
+            "units": 2,
+            "semester_id": "300-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 332",
+            "title": "Energy Conversion",
+            "units": 2,
+            "semester_id": "300-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 333",
+            "title": "Energy Conversion Lab",
+            "units": 1,
+            "semester_id": "300-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CEG 335",
+            "title": "Civil Engineering Technology for Non-Civil Engineers",
+            "units": 3,
+            "semester_id": "300-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "MEG 319",
+            "title": "Mechanical Engineering Technology",
+            "units": 3,
+            "semester_id": "300-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 322",
+            "title": "Operational Methods I",
+            "units": 3,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 322",
+            "title": "Circuits & Systems II",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 326",
+            "title": "Electronic Circuits II",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 323",
+            "title": "Instrumentation & Measurement II",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 324",
+            "title": "Transmission Lines & Filters",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 325",
+            "title": "Logic Design of Digital Systems",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 328",
+            "title": "Power Electronics",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 346",
+            "title": "Electronics Circuits Lab II",
+            "units": 1,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 321",
+            "title": "Software Development Technique",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 322",
+            "title": "Introduction to Machine Learning and Programming",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 329",
+            "title": "Electrical Drives",
+            "units": 2,
+            "semester_id": "300-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 340",
+            "title": "Electrical Drives Lab",
+            "units": 1,
+            "semester_id": "300-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "SIW 300",
+            "title": "SIWES II",
+            "units": 3,
+            "semester_id": "300-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 412",
+            "title": "Numerical Methods in Engineering",
+            "units": 3,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 413",
+            "title": "Engineering Statistics",
+            "units": 3,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "GEG 411",
+            "title": "Technical Communications",
+            "units": 1,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 410",
+            "title": "Microprocessor & Microcomputer",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 433",
+            "title": "Software and Hardware Laboratory",
+            "units": 1,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 432",
+            "title": "Microprocessor Laboratory",
+            "units": 1,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 435",
+            "title": "Prototyping Techniques",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 415",
+            "title": "Computer Programming Languages",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 417",
+            "title": "Digital Computer Technology",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 419",
+            "title": "Digital Electronics",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 413",
+            "title": "Communication Systems",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 453",
+            "title": "Classical Control Systems",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 452",
+            "title": "Electromagnetic Wave Theory I",
+            "units": 2,
+            "semester_id": "400-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 433",
+            "title": "Communication System Laboratory",
+            "units": 3,
+            "semester_id": "400-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 437",
+            "title": "Control Systems Laboratory",
+            "units": 3,
+            "semester_id": "400-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "SIW 400",
+            "title": "SIWES",
+            "units": 6,
+            "semester_id": "400-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "ECN 471",
+            "title": "Engineering Economics",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 535",
+            "title": "Software Engineering",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 513",
+            "title": "Machine Language Programming",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 536",
+            "title": "Systems Programming I",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 577",
+            "title": "Project I",
+            "units": 3,
+            "semester_id": "500-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 532",
+            "title": "Power Systems for Computer Engineers",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 519",
+            "title": "Digital Computer Design I",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 533",
+            "title": "Reliability and Maintainability",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 534",
+            "title": "Information Theory & Coding",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 536",
+            "title": "Electromagnetic Wave Theory II",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 533",
+            "title": "Microcomputer Graphics",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 535",
+            "title": "Intro. To VLSI Design",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 537",
+            "title": "Telephony & Facsimile Systems",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 531",
+            "title": "Computer Security Techniques I",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 533",
+            "title": "Cyberpreneurship and Cyber Law",
+            "units": 2,
+            "semester_id": "500-1",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CIL 524",
+            "title": "Law of Engineering Contract",
+            "units": 1,
+            "semester_id": "500-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "BUS 440",
+            "title": "Management for Engineers",
+            "units": 1,
+            "semester_id": "500-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 522",
+            "title": "Database Management",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 524",
+            "title": "Systems Programming II",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 528",
+            "title": "Computer Networks",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 588",
+            "title": "Project II",
+            "units": 3,
+            "semester_id": "500-2",
+            "is_elective": false,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 529",
+            "title": "Digital Signal Processing",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 542",
+            "title": "Digital Computer Design II",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 526",
+            "title": "Assembly Machine Language Programming",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 540",
+            "title": "Digital Control Systems",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 523",
+            "title": "Microprogramming & Structure",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "EEG 548",
+            "title": "Antennas & Propagation",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 542",
+            "title": "Computer Security Technique II",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 544",
+            "title": "Artificial Neural Network",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        },
+        {
+            "code": "CPE 546",
+            "title": "Robotics and Automation",
+            "units": 2,
+            "semester_id": "500-2",
+            "is_elective": true,
+            "department": "Computer Engineering"
+        }
+    ],
+    "count": 109
+}
