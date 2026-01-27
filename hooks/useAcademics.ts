@@ -68,8 +68,9 @@ export const GRADE_SCALE: Record<string, number> = {
   F: 0.0,
 };
 
-export function getGradePoint(grade: string): number {
-  return GRADE_SCALE[grade.toUpperCase()] ?? 0;
+export function getGradePoint(grade: string): number | null {
+  if (!grade || grade === "-") return null;
+  return GRADE_SCALE[grade.toUpperCase()] ?? null;
 }
 
 export function useAcademics() {
@@ -144,13 +145,23 @@ export function useAcademics() {
       return null;
     }
 
+    // Optimistic: add to local state
+    setCourses((prev) => [...prev, data]);
     toast.success("Course added!");
-    await fetchData();
     return data;
   };
 
-  // Update course
+  // Update course (OPTIMISTIC - no reload)
   const updateCourse = async (id: string, updates: Partial<Course>) => {
+    // Optimistic: update local state immediately
+    setCourses((prev) =>
+      prev.map((c) =>
+        c.id === id
+          ? { ...c, ...updates, updated_at: new Date().toISOString() }
+          : c,
+      ),
+    );
+
     const { error } = await supabase
       .from("courses")
       .update({ ...updates, updated_at: new Date().toISOString() })
@@ -158,25 +169,30 @@ export function useAcademics() {
 
     if (error) {
       toast.error("Failed to update course: " + error.message);
+      // Rollback: refetch on error
+      await fetchData();
       return false;
     }
 
-    toast.success("Course updated!");
-    await fetchData();
     return true;
   };
 
-  // Delete course
+  // Delete course (OPTIMISTIC - no reload)
   const deleteCourse = async (id: string) => {
+    // Optimistic: remove from local state immediately
+    const previousCourses = courses;
+    setCourses((prev) => prev.filter((c) => c.id !== id));
+
     const { error } = await supabase.from("courses").delete().eq("id", id);
 
     if (error) {
       toast.error("Failed to delete course: " + error.message);
+      // Rollback on error
+      setCourses(previousCourses);
       return false;
     }
 
     toast.success("Course deleted!");
-    await fetchData();
     return true;
   };
 
@@ -216,15 +232,139 @@ export function useAcademics() {
     return true;
   };
 
+  // Sync all catalog courses to enrolled courses table (bulk import)
+  const syncFromCatalog = async () => {
+    if (catalog.length === 0) {
+      toast.error("No courses in catalog to sync");
+      return false;
+    }
+
+    // Get existing course codes to avoid duplicates
+    const existingCodes = new Set(courses.map((c) => c.code));
+
+    // Filter out courses that already exist
+    const newCourses = catalog
+      .filter((c) => !existingCodes.has(c.code))
+      .map((c) => ({
+        catalog_id: c.id,
+        code: c.code,
+        title: c.title,
+        units: c.units,
+        semester_id: c.semester_id,
+        grade: null,
+        grade_point: null,
+        category: c.is_elective ? "elective" : "core",
+        difficulty: null,
+        study_hours: null,
+        attendance: null,
+        exam_score: null,
+        assignment_avg: null,
+        notes: null,
+        professor: null,
+        is_retake: false,
+        academic_year: null,
+      }));
+
+    if (newCourses.length === 0) {
+      toast.info("All catalog courses are already synced!");
+      return true;
+    }
+
+    const { error } = await supabase.from("courses").insert(newCourses);
+
+    if (error) {
+      toast.error("Failed to sync courses: " + error.message);
+      return false;
+    }
+
+    toast.success(`Synced ${newCourses.length} courses from catalog!`);
+    await fetchData();
+    return true;
+  };
+
+  // Client-side Exclusions for "What-if" Analysis
+  const [excludedCourseIds, setExcludedCourseIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [excludedSemesterIds, setExcludedSemesterIds] = useState<Set<string>>(
+    new Set(),
+  );
+
+  const toggleCourseExclusion = (courseId: string) => {
+    const newSet = new Set(excludedCourseIds);
+    if (newSet.has(courseId)) {
+      newSet.delete(courseId);
+    } else {
+      newSet.add(courseId);
+    }
+    setExcludedCourseIds(newSet);
+  };
+
+  const toggleSemesterExclusion = (semesterId: string) => {
+    const newSet = new Set(excludedSemesterIds);
+    if (newSet.has(semesterId)) {
+      newSet.delete(semesterId);
+    } else {
+      newSet.add(semesterId);
+    }
+    setExcludedSemesterIds(newSet);
+  };
+
+  // Client-side GPA Calculation
+  const calculateStats = () => {
+    if (courses.length === 0)
+      return { cgpa: 0, totalUnits: 0, totalCourses: 0 };
+
+    let totalPoints = 0;
+    let totalUnits = 0;
+    let courseCount = 0;
+
+    courses.forEach((course) => {
+      // Skip if course or semester is excluded
+      if (
+        excludedCourseIds.has(course.id) ||
+        excludedSemesterIds.has(course.semester_id)
+      ) {
+        return;
+      }
+
+      // Skip if no grade
+      // Fix: Use strict null check so F grade (0) is NOT skipped
+      if (course.grade_point === null || course.units === 0) return;
+
+      totalPoints += course.grade_point * course.units;
+      totalUnits += course.units;
+      courseCount++;
+    });
+
+    const cgpa = totalUnits > 0 ? totalPoints / totalUnits : 0.0;
+
+    return {
+      cgpa,
+      totalUnits,
+      totalCourses: courseCount,
+    };
+  };
+
+  const stats = calculateStats();
+
   // Get unique semesters
   const getSemesters = (): string[] => {
-    const all = [
+    const sessionMap: Record<string, number> = {};
+    const semesters = [
       ...new Set([
         ...courses.map((c) => c.semester_id),
         ...catalog.map((c) => c.semester_id),
       ]),
     ];
-    return all.sort();
+
+    // Helper to sort semesters: 100-1, 100-2, 200-1...
+    return semesters.sort((a, b) => {
+      const [lvlA, semA] = a.split("-").map(Number);
+      const [lvlB, semB] = b.split("-").map(Number);
+      if (lvlA !== lvlB) return lvlA - lvlB;
+      return semA - semB;
+    });
   };
 
   // Get courses for a semester
@@ -240,9 +380,10 @@ export function useAcademics() {
   return {
     courses,
     catalog,
-    semesterGPAs,
-    cumulativeGPA,
     isLoading,
+    stats,
+    excludedCourseIds,
+    excludedSemesterIds,
     fetchData,
     addCourse,
     updateCourse,
@@ -253,5 +394,8 @@ export function useAcademics() {
     getCoursesBySemester,
     getCatalogBySemester,
     getGradePoint,
+    toggleCourseExclusion,
+    toggleSemesterExclusion,
+    syncFromCatalog,
   };
 }
