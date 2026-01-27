@@ -99,7 +99,7 @@ export default function RootLayout({
         <MainLayout>
           <main>{children}</main>
         </MainLayout>
-        <Script src="https://js.puter.com/v2/"></Script>
+        {/* <Script src="https://js.puter.com/v2/"></Script> */}
         <Analytics />
       </body>
     </html>
