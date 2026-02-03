@@ -6,7 +6,7 @@ import { AlertTriangle } from "lucide-react";
 
 export default function ErrorComponent({
   error,
-  reset,
+  reset = () => window.location.reload(),
 }: {
   error: Error & { digest?: string };
   reset: () => void;
