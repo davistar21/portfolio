@@ -195,8 +195,8 @@ body,
   /* Light Mode – Clean, Tech-Forward                       */
   /* ------------------------------------------------------ */
 
-  /* --background: oklch(0.99 0 0); Pure White */
-  --background: rgb(226, 253, 255);
+  --background: oklch(0.99 0 0);
+  /* --background: rgb(226, 253, 255); */
   --foreground: oklch(0.15 0.02 260); /* Dark Navy */
 
   --card: oklch(1 0 0);
