@@ -83,7 +83,7 @@ export default async function HomePage() {
   const workExperience = allExperience.filter((e) => e.type === "job");
   const volunteering = allExperience.filter((e) => e.type === "volunteering");
   const achievements = allExperience.filter((e) => e.type === "achievement");
-
+  // await new Promise((resolve) => setTimeout(resolve, 300000));
   return (
     <section className="flex flex-col gap-24 mt-10 md:px-8 px-4 bg-background">
       <Hero />
