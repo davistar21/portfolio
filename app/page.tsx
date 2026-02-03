@@ -1,5 +1,6 @@
 import React from "react";
 import Hero from "@/components/Hero";
+import SkillsMarquee from "@/components/SkillsMarquee";
 import Projects from "@/components/projects/Projects";
 import Education from "@/components/Education";
 import WorkExperience from "@/components/WorkExperience";
@@ -19,6 +20,8 @@ type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"] & {
   blog_post_images?: Database["public"]["Tables"]["blog_post_images"]["Row"][];
 };
 
+type Experience = Database["public"]["Tables"]["experience"]["Row"];
+
 async function getFeaturedProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from("projects")
@@ -34,7 +37,7 @@ async function getFeaturedProjects(): Promise<Project[]> {
   return (data as unknown as Project[]).map((p) => ({
     ...p,
     project_images: p.project_images?.sort(
-      (a, b) => a.order_index - b.order_index
+      (a, b) => a.order_index - b.order_index,
     ),
   }));
 }
@@ -46,7 +49,7 @@ async function getRecentPosts(): Promise<BlogPost[]> {
     .eq("is_active", true)
     .not("published_at", "is", null)
     .order("published_at", { ascending: false })
-    .limit(3); // Just get a few for homepage preview
+    .limit(3);
 
   if (error) {
     console.error("Error fetching blog posts:", error);
@@ -56,21 +59,41 @@ async function getRecentPosts(): Promise<BlogPost[]> {
   return data as unknown as BlogPost[];
 }
 
+async function getExperience(): Promise<Experience[]> {
+  const { data, error } = await supabase
+    .from("experience")
+    .select("*")
+    .order("order_index", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching experience:", error);
+    return [];
+  }
+
+  return data as Experience[];
+}
+
 export default async function HomePage() {
-  const [featuredProjects, recentPosts] = await Promise.all([
+  const [featuredProjects, recentPosts, allExperience] = await Promise.all([
     getFeaturedProjects(),
     getRecentPosts(),
+    getExperience(),
   ]);
+
+  const workExperience = allExperience.filter((e) => e.type === "job");
+  const volunteering = allExperience.filter((e) => e.type === "volunteering");
+  const achievements = allExperience.filter((e) => e.type === "achievement");
 
   return (
     <section className="flex flex-col gap-24 mt-10 md:px-8 px-4 bg-background">
       <Hero />
+      <SkillsMarquee />
       <Projects preview={true} initialProjects={featuredProjects} />
       <BlogPreview initialPosts={recentPosts} />
       <Education />
-      <WorkExperience />
-      <Volunteering />
-      <Achievements />
+      <WorkExperience initialData={workExperience} />
+      <Volunteering initialData={volunteering} />
+      <Achievements initialData={achievements} />
     </section>
   );
 }
