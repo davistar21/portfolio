@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { Metadata } from "next";
 import ProjectPageClient from "@/components/projects/ProjectPageClient";
 import { Database } from "@/types/supabase";
+import Link from "next/link";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -41,7 +42,7 @@ async function getProject(slugOrId: string): Promise<Project | null> {
     .select("slug, id");
   console.log(
     "DEBUG: Available slugs in DB:",
-    allProjects?.map((p) => ({ slug: p.slug, id: p.id }))
+    allProjects?.map((p) => ({ slug: p.slug, id: p.id })),
   );
 
   // 2. Fallback: Fetch by ID (ONLY if slugOrId looks like a UUID)
@@ -127,6 +128,9 @@ export default async function ProjectPage({ params }: Props) {
           <p className="text-muted-foreground">
             The project you are looking for does not exist or has been removed.
           </p>
+          <Link href="/projects" className="mt-4">
+            Back to Projects
+          </Link>
         </div>
       </div>
     );
