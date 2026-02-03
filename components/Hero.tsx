@@ -66,7 +66,7 @@ const Hero = () => {
           Let&apos;s Connect
         </a>
         <a
-          href="https://drive.google.com/file/d/1Nl31fOdSejI0qLFFHuIjWP18H7-7pLen/view?usp=sharing"
+          href="https://drive.google.com/file/d/1Nl31fOdSejI0qLFFHuIjWP18H7-7pLen/preview"
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3 border border-border bg-background hover:bg-muted text-foreground font-medium rounded-full transition-all active:scale-95 flex items-center gap-2 group"

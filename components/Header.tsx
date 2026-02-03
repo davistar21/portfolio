@@ -15,7 +15,7 @@ const links = [
   { name: "Blog", href: "/blog" },
   {
     name: "Resume",
-    href: "https://drive.google.com/file/d/1Nl31fOdSejI0qLFFHuIjWP18H7-7pLen/view?usp=sharing",
+    href: "https://drive.google.com/file/d/1Nl31fOdSejI0qLFFHuIjWP18H7-7pLen/preview",
   },
 ];
 
@@ -47,7 +47,7 @@ export default function Header() {
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
           scrolled || isOpen
             ? "bg-background/80 backdrop-blur-md border-border shadow-sm py-3"
-            : "!bg-transparent py-5"
+            : "!bg-transparent py-5",
         )}
       >
         <div className="container px-4 md:px-6 mx-auto flex items-center justify-between">
@@ -60,14 +60,16 @@ export default function Header() {
                 const isActive =
                   pathname === link.href ||
                   (link.href !== "/" && pathname.startsWith(link.href));
-
+                const isResumePath = link.name === "Resume";
                 return (
                   <li key={link.href}>
                     <Link
                       href={link.href}
+                      target={isResumePath ? "_blank" : "_self"}
+                      rel={isResumePath ? "noopener noreferrer" : ""}
                       className={cn(
                         "text-sm font-medium transition-colors relative hover:text-primary",
-                        isActive ? "text-primary" : "text-muted-foreground"
+                        isActive ? "text-primary" : "text-muted-foreground",
                       )}
                     >
                       {link.name}
@@ -85,7 +87,7 @@ export default function Header() {
             <div className="w-px h-6 bg-border mx-2" />
             <ThemeToggle />
             <Link
-              href="/#connect"
+              href="#connect"
               className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 transition-transform active:scale-95"
             >
               Contact Me
@@ -145,10 +147,14 @@ export default function Header() {
                     >
                       <Link
                         href={link.href}
+                        target={link.name === "Resume" ? "_blank" : "_self"}
+                        rel={
+                          link.name === "Resume" ? "noopener noreferrer" : ""
+                        }
                         onClick={() => setIsOpen(false)}
                         className={cn(
                           "block text-2xl font-semibold py-2 hover:text-primary transition-colors relative w-fit",
-                          isActive ? "text-primary" : "text-muted-foreground"
+                          isActive ? "text-primary" : "text-muted-foreground",
                         )}
                       >
                         {link.name}
@@ -171,7 +177,7 @@ export default function Header() {
                   className="w-full flex justify-center pt-8"
                 >
                   <Link
-                    href="/#connect"
+                    href="#connect"
                     onClick={() => setIsOpen(false)}
                     className="px-8 py-4 bg-primary text-primary-foreground text-lg font-bold rounded-full w-full max-w-xs text-center shadow-lg active:scale-95 transition-transform"
                   >
