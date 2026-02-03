@@ -16,25 +16,26 @@ interface ProjectDescriptionEditorProps {
   projectId?: string | null;
 }
 
-const AI_PROMPT = `You are a technical writer helping showcase portfolio projects. Given a project's README content, generate a concise project description.
+const AI_PROMPT = `You are a technical writer helping showcase portfolio projects. Given a project's README content, generate a compelling project description with metrics.
 
 OUTPUT FORMAT (JSON):
 {
-  "description": "A 4-5 sentence paragraph describing what the project does, its purpose, and key features. Write in third person, professional tone. Do NOT use bullet points in this paragraph.",
+  "description": "A 4-5 sentence paragraph describing what the project does, its purpose, and key features. Write in third person, professional tone. Do NOT use bullet points.",
   "techStack": {
     "Frontend": ["Next.js", "React", "TailwindCSS"],
     "Backend": ["Node.js", "Express"],
     "Database": ["PostgreSQL", "Supabase"],
     "AI": ["Groq", "Claude"],
     "Other": ["Docker", "AWS"]
-  }
+  },
+  "metrics": "2-5 sentences highlighting realistic, project-appropriate metrics. These could include: time saved, scale/reach, efficiency gains, performance improvements, user engagement stats, or other quantifiable impacts. Write as flowing prose, not bullets. Make them believable and contextual to the project type."
 }
 
 RULES:
 - Only include tech stack categories that apply (omit empty ones)
 - Be specific about technologies mentioned in the README
 - The description should be engaging and highlight the project's value
-- Detect the tech stack from package.json contents, imports, or explicit mentions
+- For metrics: if it's an automation tool, mention time saved; if it's a platform, mention scale/reach; if it's a dev tool, mention efficiency gains. Be realistic and honest.
 - Return ONLY valid JSON, no markdown code blocks`;
 
 const ProjectDescriptionEditor = ({
@@ -63,9 +64,10 @@ const ProjectDescriptionEditor = ({
         `${AI_PROMPT}\n\nREADME CONTENT:\n${readmeContent}`,
       );
 
-      const { description, techStack } = result as {
+      const { description, techStack, metrics } = result as {
         description: string;
         techStack: Record<string, string[]>;
+        metrics: string;
       };
 
       // Format the tech stack as markdown
@@ -76,7 +78,10 @@ const ProjectDescriptionEditor = ({
         }
       }
 
-      const fullDescription = description + techStackMarkdown;
+      // Add metrics section
+      const metricsMarkdown = metrics ? `\n\n---\n\n${metrics}` : "";
+
+      const fullDescription = description + techStackMarkdown + metricsMarkdown;
 
       setFormData({
         ...formData,
