@@ -1,5 +1,6 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import ProjectSkeleton from "@/components/projects/ProjectSkeleton";
 
 export default function Loading() {
   return (
@@ -13,20 +14,7 @@ export default function Loading() {
         </p>
       </div>
 
-      <div className="py-6">
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(300px,auto)]">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-64 rounded-xl border bg-card p-4 space-y-4"
-            >
-              <Skeleton className="w-full h-32 rounded-lg" />
-              <Skeleton className="w-3/4 h-6" />
-              <Skeleton className="w-full h-4" />
-            </div>
-          ))}
-        </div>
-      </div>
+      <ProjectSkeleton />
     </div>
   );
 }

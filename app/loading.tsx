@@ -2,9 +2,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div>
+    <div className="pt-10">
       <HeroSkeleton />
-      <BlogCardSkeleton />
+      {/* <BlogCardSkeleton /> */}
     </div>
   );
 }
@@ -19,6 +19,13 @@ const HeroSkeleton = () => (
     <div className="h-4" />
     <Skeleton className="w-2/3 h-4" />
     <Skeleton className="w-1/2 h-3" />
+    <div className="h-4" />
+    <div className="flex gap-4">
+      <Skeleton className="w-40 h-14 rounded-full" />
+      <Skeleton className="w-40 h-14 rounded-full" />
+    </div>
+
+    <div className="h-4" />
   </div>
 );
 
