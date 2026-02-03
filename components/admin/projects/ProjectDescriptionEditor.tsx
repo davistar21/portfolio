@@ -8,7 +8,7 @@ import { Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 
-type ProjectInsert = Database["public"]["Tables"]["projects"]["Insert"];
+type ProjectInsert = Database["public"]["Tables"]["projects"]["Insert"]; // some comment
 
 interface ProjectDescriptionEditorProps {
   formData: Partial<ProjectInsert>;
