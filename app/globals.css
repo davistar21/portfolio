@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+/* @import url("https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap"); */
+
 @font-face {
   font-family: "Lato";
   font-style: normal;
@@ -7,9 +9,20 @@
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/lato/v25/S6u9w4BMUTPHh6UVSwiPGQ.woff2)
     format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Geom";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geom/v1/X7nk4bw6Cf6j8tanHAa_3M0.woff2)
+    format("woff2");
+  /* Removed unicode-range to support all available characters */
 }
 
 /* html,
@@ -133,7 +146,7 @@ body,
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: "Lato", sans-serif;
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -175,7 +188,8 @@ body,
   /* Light Mode – Clean, Tech-Forward                       */
   /* ------------------------------------------------------ */
 
-  --background: oklch(0.99 0 0); /* Pure White */
+  /* --background: oklch(0.99 0 0); Pure White */
+  --background: rgb(226, 253, 255);
   --foreground: oklch(0.15 0.02 260); /* Dark Navy */
 
   --card: oklch(1 0 0);
@@ -288,7 +302,7 @@ body,
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 selection:bg-primary selection:text-primary-foreground;
   }
   body {
     @apply bg-background text-foreground;
