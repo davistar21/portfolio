@@ -102,8 +102,8 @@ const SkillItem = ({
   name: string;
 }) => (
   <div className="flex items-center gap-2 group">
-    <Icon className="w-8 h-8 md:w-10 md:h-10 text-foreground group-hover:text-primary transition-colors duration-300" />
-    <span className="text-xl md:text-2xl font-bold text-muted-foreground/30 uppercase tracking-tighter group-hover:text-muted-foreground transition-colors duration-300">
+    <Icon className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/70 group-hover:text-primary transition-colors duration-300" />
+    <span className="text-xl md:text-2xl font-bold text-muted-foreground/70 group-hover:text-primary uppercase tracking-tighter transition-colors duration-300">
       {name}
     </span>
   </div>
