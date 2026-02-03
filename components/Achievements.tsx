@@ -1,10 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition, faTrophy } from "@fortawesome/free-solid-svg-icons";
+import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/supabase";
 
 type Experience = Database["public"]["Tables"]["experience"]["Row"];
@@ -13,75 +11,80 @@ const AchievementCard = ({
   title,
   issuer,
   date,
-  icon,
   href,
+  isLast,
 }: {
   title: string;
   issuer: string;
   date: string;
-  icon: IconDefinition;
   href?: string;
+  isLast: boolean;
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.6, delay: 0.5 }}
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      className="border-1 border-border rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4"
+      className="relative pl-8 pb-8 group"
     >
-      <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
-        <div className="w-5 h-5 md:mt-0 mt-auto">
-          <FontAwesomeIcon icon={icon} />
-        </div>
-        <div className="flex flex-col justify-between mr-auto">
-          <span className="">{title}</span>
-          <p className=" text-muted-foreground">{issuer}</p>
-        </div>
-      </div>
-      <div className="text-muted-foreground/80 flex md:flex-col md:items-end justify-between flex-row w-full">
-        <span>{date}</span>
+      {/* Timeline line */}
+      {!isLast && (
+        <div className="absolute left-[11px] top-6 w-[2px] h-full bg-gradient-to-b from-accent/50 to-transparent" />
+      )}
 
-        {href && (
-          <a
-            className="text-sm flex gap-[2px] items-center !text-muted-foreground hover:text-foreground transition"
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View
-            <ArrowUpRight size={16} />
-          </a>
-        )}
+      {/* Timeline dot */}
+      <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center">
+        <FontAwesomeIcon icon={faTrophy} className="w-3 h-3 text-accent" />
+      </div>
+
+      {/* Card content */}
+      <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-5 hover:border-accent/30 transition-all duration-300 hover:shadow-lg hover:shadow-accent/5">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+          <div className="flex-1">
+            <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors">
+              {title}
+            </h3>
+            <p className="text-muted-foreground text-sm">{issuer}</p>
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-xs font-mono text-muted-foreground/70 bg-muted/50 px-2 py-1 rounded-md">
+              {date}
+            </span>
+            {href && (
+              <a
+                className="text-xs flex gap-1 items-center text-accent hover:text-accent/80 transition"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View
+                <ArrowUpRight size={12} />
+              </a>
+            )}
+          </div>
+        </div>
       </div>
     </motion.div>
   );
 };
-const Achievements = () => {
-  const [achievements, setAchievements] = useState<Experience[]>([]);
 
-  useEffect(() => {
-    const fetchAchievements = async () => {
-      const { data } = await supabase
-        .from("experience")
-        .select("*")
-        .eq("type", "achievement")
-        .order("order_index", { ascending: true });
-
-      if (data) {
-        setAchievements(data);
-      }
-    };
-    fetchAchievements();
-  }, []);
-
-  if (achievements.length === 0) return null;
+const Achievements = ({ initialData }: { initialData: Experience[] }) => {
+  if (initialData.length === 0) return null;
 
   return (
     <div>
-      <h1 className="mb-4 text-lg font-semibold">Achievements</h1>
-      <div className="space-y-4">
-        {achievements.map((item) => (
+      <motion.h2
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-2xl font-bold mb-6 flex items-center gap-2"
+      >
+        <span className="w-2 h-2 rounded-full bg-accent" />
+        Achievements
+      </motion.h2>
+      <div className="ml-1">
+        {initialData.map((item, index) => (
           <AchievementCard
             key={item.id}
             title={item.title}
@@ -91,8 +94,8 @@ const Achievements = () => {
               month: "long",
               day: "numeric",
             })}
-            icon={faTrophy}
             href={item.organization_url || undefined}
+            isLast={index === initialData.length - 1}
           />
         ))}
       </div>

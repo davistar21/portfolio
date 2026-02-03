@@ -1,9 +1,7 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import { faList, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { faHandsHelping } from "@fortawesome/free-solid-svg-icons";
 import { Database } from "@/types/supabase";
 
 type Experience = Database["public"]["Tables"]["experience"]["Row"];
@@ -12,66 +10,70 @@ const VolunteeringCard = ({
   title,
   issuer,
   date,
-  icon,
+  isLast,
 }: {
   title: string;
   issuer: string;
   date: string;
-  icon: IconDefinition;
-  certificate?: string;
+  isLast: boolean;
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      className="border-1 border-border rounded-xl py-5 px-4 flex flex-col md:flex-row gap-4 items-start"
+      className="relative pl-8 pb-8 group"
     >
-      <div className="flex md:flex-row flex-row-reverse gap-4 items-start justofy-between w-full">
-        <div className="w-5 h-5 md:mt-0 mt-auto">
-          <FontAwesomeIcon icon={icon} />
-        </div>
-        <div className="flex flex-col justify-between mr-auto">
-          <span className="!m-0">{title}</span>
-          <p className=" text-muted-foreground">{issuer}</p>
-        </div>
+      {/* Timeline line */}
+      {!isLast && (
+        <div className="absolute left-[11px] top-6 w-[2px] h-full bg-gradient-to-b from-amber-500/50 to-transparent" />
+      )}
+
+      {/* Timeline dot */}
+      <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center">
+        <FontAwesomeIcon
+          icon={faHandsHelping}
+          className="w-3 h-3 text-amber-500"
+        />
       </div>
-      <div className="text-muted-foreground/80 flex md:flex-col md:items-end justify-between flex-row w-full">
-        <span>{date}</span>
+
+      {/* Card content */}
+      <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-5 hover:border-amber-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          <div>
+            <h3 className="font-semibold text-foreground group-hover:text-amber-500 transition-colors">
+              {title}
+            </h3>
+            <p className="text-muted-foreground text-sm">{issuer}</p>
+          </div>
+          <span className="text-xs font-mono text-muted-foreground/70 bg-muted/50 px-2 py-1 rounded-md w-fit">
+            {date}
+          </span>
+        </div>
       </div>
     </motion.div>
   );
 };
 
-const Volunteering = () => {
-  const [volunteering, setVolunteering] = useState<Experience[]>([]);
-
-  useEffect(() => {
-    const fetchVolunteering = async () => {
-      const { data } = await supabase
-        .from("experience")
-        .select("*")
-        .eq("type", "volunteering")
-        .order("order_index", { ascending: true });
-
-      if (data) {
-        setVolunteering(data);
-      }
-    };
-    fetchVolunteering();
-  }, []);
-
-  if (volunteering.length === 0) return null;
+const Volunteering = ({ initialData }: { initialData: Experience[] }) => {
+  if (initialData.length === 0) return null;
 
   return (
     <div className="relative">
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-amber-800/10 rounded-full blur-3xl pointer-events-none " />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none " />
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-amber-800/10 rounded-full blur-3xl pointer-events-none" />
 
-      <h1 className="mb-4 text-lg font-semibold">Volunteering</h1>
-      <div className="space-y-4">
-        {volunteering.map((item) => (
+      <motion.h2
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-2xl font-bold mb-6 flex items-center gap-2"
+      >
+        <span className="w-2 h-2 rounded-full bg-amber-500" />
+        Volunteering
+      </motion.h2>
+      <div className="ml-1">
+        {initialData.map((item, index) => (
           <VolunteeringCard
             key={item.id}
             title={item.title}
@@ -87,7 +89,7 @@ const Volunteering = () => {
                   })
                 : "Present"
             }`}
-            icon={faList}
+            isLast={index === initialData.length - 1}
           />
         ))}
       </div>
