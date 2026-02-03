@@ -12,14 +12,15 @@ type Project = Database["public"]["Tables"]["projects"]["Row"] & {
 interface ProjectCardProps {
   project: Project;
   className?: string;
+  clamped?: boolean;
 }
 
-const ProjectCard = ({ project, className }: ProjectCardProps) => {
+const ProjectCard = ({ project, className, clamped }: ProjectCardProps) => {
   return (
     <motion.div
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-all hover:shadow-lg h-full",
-        className
+        className,
       )}
     >
       {/* Image Section */}
@@ -62,7 +63,12 @@ const ProjectCard = ({ project, className }: ProjectCardProps) => {
           </Link>
         </div>
 
-        <p className="text-muted-foreground text-sm line-clamp-3 mb-4 font-varelaRound">
+        <p
+          className={cn(
+            "text-muted-foreground text-sm mb-4 font-varelaRound",
+            clamped ? "line-clamp-8" : "line-clamp-3",
+          )}
+        >
           {project.description}
         </p>
 

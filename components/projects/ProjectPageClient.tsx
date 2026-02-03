@@ -127,19 +127,29 @@ export default function ProjectPageClient({ project }: ProjectPageClientProps) {
           {/* Gallery (if extra images exist) */}
           {galleryImages.length > 0 && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold">Gallery</h2>
+              <motion.h2
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                className="text-2xl font-bold"
+              >
+                Gallery
+              </motion.h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {galleryImages.map((img, idx) => (
-                  <div
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * idx, ease: "easeInOut" }}
+                    viewport={{ amount: 0.2, once: true }}
                     key={idx}
-                    className="rounded-xl overflow-hidden border shadow-sm group"
+                    // className=" overflow-hidden shadow-sm group"
                   >
                     <img
                       src={img.image_url}
                       alt={img.alt_text || `Project image ${idx + 2}`}
-                      className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full rounded-xl h-auto object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>

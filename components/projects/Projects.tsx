@@ -167,7 +167,7 @@ const Projects = ({ preview = false, initialProjects }: ProjectsProps) => {
           "grid gap-6",
           preview
             ? "grid-cols-1 md:grid-cols-2"
-            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(300px,auto)]"
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(300px,auto)]",
         )}
       >
         {projects.map((project, index) => {
@@ -185,6 +185,7 @@ const Projects = ({ preview = false, initialProjects }: ProjectsProps) => {
             if (index === 0 || index === 3) spanClass = "md:col-span-2";
             // if (index === 2) spanClass = "row-span-2";
           }
+          let clamped = !preview && (index == 1 || index == 2);
 
           return (
             <motion.div
@@ -200,7 +201,7 @@ const Projects = ({ preview = false, initialProjects }: ProjectsProps) => {
               viewport={{ once: true }}
               className={spanClass}
             >
-              <ProjectCard project={project} />
+              <ProjectCard project={project} clamped={clamped} />
             </motion.div>
           );
         })}
