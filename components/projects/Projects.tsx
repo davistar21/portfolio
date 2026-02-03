@@ -185,7 +185,7 @@ const Projects = ({ preview = false, initialProjects }: ProjectsProps) => {
             if (index === 0 || index === 3) spanClass = "md:col-span-2";
             // if (index === 2) spanClass = "row-span-2";
           }
-          let clamped = !preview && (index == 1 || index == 2);
+          const clamped = !preview && (index == 1 || index == 2);
 
           return (
             <motion.div
