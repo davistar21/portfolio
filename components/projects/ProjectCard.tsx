@@ -66,7 +66,7 @@ const ProjectCard = ({ project, className, clamped }: ProjectCardProps) => {
         <p
           className={cn(
             "text-muted-foreground text-sm mb-4 font-varelaRound",
-            clamped ? "line-clamp-8" : "line-clamp-3",
+            clamped ? "line-clamp-3 md:line-clamp-8" : "line-clamp-3",
           )}
         >
           {project.description}
