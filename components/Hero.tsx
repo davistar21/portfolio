@@ -10,18 +10,18 @@ const Hero = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="text-xl font-semibold"
+        className="text-xl font-semibold font-serif"
       >
         Eyitayo Obembe
       </motion.h1>
       <motion.h2
-        className="mb-8 text-muted-foreground"
+        className="mb-8 text-muted-foreground text-primary/90"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 1 }}
         viewport={{ once: true }}
       >
-        Full Stack AI Engineer
+        Software Engineer
       </motion.h2>
       <AnimatedText
         words={[
@@ -30,7 +30,7 @@ const Hero = () => {
         ]}
       />
       <motion.p
-        className="mb-6 text-muted-foreground/80"
+        className="mb-6 text-muted-foreground/80 text-primary/80"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
@@ -66,7 +66,7 @@ const Hero = () => {
           Let&apos;s Connect
         </a>
         <a
-          href="https://drive.google.com/file/d/1Nl31fOdSejI0qLFFHuIjWP18H7-7pLen/preview"
+          href="/resume"
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3 border border-border bg-background hover:bg-muted text-foreground font-medium rounded-full transition-all active:scale-95 flex items-center gap-2 group"

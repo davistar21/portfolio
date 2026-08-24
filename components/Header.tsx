@@ -11,11 +11,12 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
   { name: "Blog", href: "/blog" },
   {
     name: "Resume",
-    href: "https://drive.google.com/file/d/1Nl31fOdSejI0qLFFHuIjWP18H7-7pLen/preview",
+    href: "/resume",
   },
 ];
 
