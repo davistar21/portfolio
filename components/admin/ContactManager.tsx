@@ -6,18 +6,19 @@ import { Database } from "@/types/supabase";
 import { toast } from "sonner";
 import { Loader2, Mail, CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "../ui/button";
 type ContactMessage = Database["public"]["Tables"]["contact_messages"]["Row"];
 
 export default function ContactManager() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchMessages();
   }, []);
 
   const fetchMessages = async () => {
-    setLoading(true);
+    // setLoading(true);
     const { data, error } = await supabase
       .from("contact_messages")
       .select("*")
@@ -28,11 +29,11 @@ export default function ContactManager() {
     } else {
       setMessages(data || []);
     }
-    setLoading(false);
+    // setLoading(false);
   };
 
   const toggleHandled = async (message: ContactMessage) => {
-    setLoading(true);
+    // setLoading(true);
     const { error } = await supabase
       .from("contact_messages")
       .update({ handled: !message.handled })
@@ -44,7 +45,20 @@ export default function ContactManager() {
       toast.success("Message status updated");
       fetchMessages();
     }
-    setLoading(false);
+    // setLoading(false);
+  };
+  const handleRead = async () => {
+    const { error } = await supabase
+      .from("contact_messages")
+      .update({ handled: true })
+      .eq("handled", false);
+
+    if (error) {
+      toast.error("Failed to read all messages: " + error.message);
+    } else {
+      toast.success("All messages marked as read");
+      fetchMessages();
+    }
   };
 
   if (loading)
@@ -66,6 +80,12 @@ export default function ContactManager() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Contact Messages</h2>
+        <Button
+          className="text-xs rounded-full !py-[2px] px-3"
+          onClick={handleRead}
+        >
+          Read All
+        </Button>
       </div>
 
       <div className="grid gap-4">
@@ -100,11 +120,9 @@ export default function ContactManager() {
                   message.handled ? "Mark as unhandled" : "Mark as handled"
                 }
               >
-                {message.handled ? (
-                  <CheckCircle className="w-5 h-5" />
-                ) : (
-                  <CheckCircle className="w-5 h-5 opacity-50" />
-                )}
+                <CheckCircle
+                  className={`w-5 h-5 ${message.handled && "opacity-50"}`}
+                />
               </button>
             </div>
             <div className="p-3 bg-muted/50 rounded-md text-sm whitespace-pre-wrap">

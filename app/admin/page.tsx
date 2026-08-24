@@ -163,7 +163,7 @@ export default function AdminPage() {
           </h1>
           <p className="text-muted-foreground">
             You are logged in as {session.user.email}, but you do not have
-            permission to view this page.
+            permission to view this page. Now get out!
           </p>
         </div>
         <button

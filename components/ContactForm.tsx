@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { MouseFollowButton } from "./Footer";
 import { ArrowUpRight, Send } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabase";
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
 
@@ -14,31 +13,26 @@ export default function ContactForm() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    formData.append("access_key", "2f8ce637-a091-4c6a-af9c-727daec1ae4f");
-
-    // Supabase Data
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const message = formData.get("message") as string;
 
     try {
-      // Execute both Web3Forms and Supabase insert in parallel
-      const [web3Res, supabaseRes] = await Promise.all([
-        fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          body: formData,
-        }),
-        supabase.from("contact_messages").insert([
-          {
-            name,
-            email,
-            message,
-          },
-        ]),
-      ]);
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
 
-      if (supabaseRes.error) {
-        console.error("Supabase Error:", supabaseRes.error);
+      if (res.status === 429) {
+        toast.error(
+          "You've sent a few messages already. Please try again later.",
+        );
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Oops! Failed to send...");
+        return;
       }
 
       toast.success("Message sent successfully!");
@@ -53,8 +47,6 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
-      <input type="hidden" name="to" value="eyitayobembe@gmail.com" />
-
       <input
         name="name"
         type="text"
