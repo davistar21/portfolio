@@ -2,7 +2,6 @@ import "./globals.css";
 import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { Providers } from "@/components/Providers";
-import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { CustomToaster } from "@/components/CustomToaster";
 import ThemeToggle from "@/components/ThemeToggle";

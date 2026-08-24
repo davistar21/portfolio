@@ -19,18 +19,18 @@ const Logo = () => {
           className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-green-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] z-10"
           initial={{ x: 0, y: -20, opacity: 0 }}
           animate={{
-            x: ["0%", "100%", "0%"], // Loop back and forth or reset? User said "continuously bounces... from left to right". Usually implies loop.
+            x: ["0%", "1000%", "0%"], // Loop back and forth or reset? User said "continuously bounces... from left to right". Usually implies loop.
             y: [0, -12, 0, -8, 0, -12, 0, -5, 0], // irregular bounce pattern matching "Eyitayo" length somewhat?
             opacity: 1,
           }}
           transition={{
             x: {
-              duration: 4, // Slower travel
+              duration: 10, // Slower travel
               repeat: Infinity,
               ease: "linear",
             },
             y: {
-              duration: 4, // Sync with x
+              duration: 10, // Sync with x
               repeat: Infinity,
               times: [0, 0.1, 0.2, 0.3, 0.45, 0.6, 0.75, 0.9, 1], // Timing the bounces
               ease: "easeInOut",
