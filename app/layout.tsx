@@ -69,7 +69,7 @@ export default function RootLayout({
           name="google-site-verification"
           content="BOj-Y0MozoW4Rh9GLYuRmofJmLXW32SIz16D7h8DC9E"
         />
-        <link rel="icon" href="/me.jpg" />
+        <link rel="icon" href="/me.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

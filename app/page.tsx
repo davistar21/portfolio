@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { Database } from "@/types/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
+import ScrollProgressBar from "@/components/about/ScrollProgressBar";
 
 export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
@@ -61,6 +62,7 @@ async function RecentBlogSection() {
 export default function HomePage() {
   return (
     <section className="flex flex-col gap-24 mt-10 md:px-8 px-4 bg-background">
+      <ScrollProgressBar />
       <Hero />
       <SkillsMarquee />
       <SectionErrorBoundary name="Featured Projects">

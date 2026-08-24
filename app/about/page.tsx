@@ -24,10 +24,7 @@ export const metadata = {
 export const revalidate = 60;
 
 async function AboutMeSection() {
-  const { data, error } = await supabase
-    .from("bio")
-    .select("*")
-    .maybeSingle();
+  const { data, error } = await supabase.from("bio").select("*").maybeSingle();
   if (error) console.error("Bio fetch error:", error);
   return <AboutMe bio={(data as Bio | null) ?? null} />;
 }
@@ -107,7 +104,7 @@ export default function AboutPage() {
     <>
       <ScrollProgressBar />
       <article className="mx-auto max-w-3xl px-4 md:px-8 pt-24 pb-32 flex flex-col gap-24 md:gap-28">
-        <AboutHero />
+        {/* <AboutHero /> */}
 
         <SectionErrorBoundary name="About Me">
           <Suspense fallback={<SectionFallback />}>

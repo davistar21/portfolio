@@ -1,28 +1,49 @@
 "use client";
 import AnimatedText from "./AnimatedText";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const Hero = () => {
   return (
     <div className="flex flex-col ">
-      <motion.h1
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="text-xl font-semibold font-serif"
-      >
-        Eyitayo Obembe
-      </motion.h1>
-      <motion.h2
-        className="mb-8 text-muted-foreground text-primary/90"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 1 }}
-        viewport={{ once: true }}
-      >
-        Software Engineer
-      </motion.h2>
+      <div className="flex flex-row-reverse justify-between items-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-6"
+        >
+          <Image
+            src="/me.png"
+            alt="Eyitayo Obembe"
+            width={100}
+            height={100}
+            className="rounded-full grayscale hover:grayscale-0 transition-all duration-500 aspect-square object-cover shadow-md border-2 border-border/50"
+            priority
+          />
+        </motion.div>
+        <div>
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-2xl font-semibold font-serif"
+          >
+            Eyitayo Obembe
+          </motion.h1>
+          <motion.h2
+            className="mb-8 text-muted-foreground text-primary/90"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 1 }}
+            viewport={{ once: true }}
+          >
+            Software Engineer
+          </motion.h2>
+        </div>
+      </div>
       <AnimatedText
         words={[
           "I build web experiences.",

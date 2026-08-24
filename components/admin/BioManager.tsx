@@ -149,10 +149,10 @@ export default function BioManager() {
 
               // Upload logic
               const fileExt = file.name.split(".").pop();
-              const fileName = `bio-${
-                crypto.randomUUID().split("-")[1]
-              }.${fileExt}`;
+              const fileName = `bio-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
               const filePath = `bio/${fileName}`;
+
+              toast.info("Uploading image...");
 
               const { error: uploadError } = await supabase.storage
                 .from("portfolio-assets")
@@ -169,20 +169,20 @@ export default function BioManager() {
                 .from("portfolio-assets")
                 .getPublicUrl(filePath);
 
-              // Delete old image if exists
-              if (bio?.profile_image_url) {
-                const oldUrl = bio.profile_image_url;
-                if (oldUrl.includes("portfolio-assets")) {
-                  const oldPath = oldUrl.split("portfolio-assets/")[1];
-                  if (oldPath) {
-                    await supabase.storage
-                      .from("portfolio-assets")
-                      .remove([oldPath]);
-                  }
-                }
-              }
+              toast.success("Image uploaded! Don't forget to click Save Bio.");
 
-              setBio(bio ? { ...bio, profile_image_url: publicUrl } : null);
+              setBio(
+                bio
+                  ? { ...bio, profile_image_url: publicUrl }
+                  : ({
+                      name: "",
+                      tagline: "",
+                      description: "",
+                      profile_image_url: publicUrl,
+                      created_at: new Date().toISOString(),
+                      updated_at: new Date().toISOString(),
+                    } as Bio)
+              );
             }}
           />
         </div>

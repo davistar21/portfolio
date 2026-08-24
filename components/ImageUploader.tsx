@@ -86,12 +86,10 @@ const ImageUploader = ({
             className="flex w-full justify-center items-center gap-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              width={100}
-              height={100}
+            <img
               src={previewUrl}
               alt="Preview"
-              className="size-20 rounded border"
+              className="w-20 h-20 rounded border object-cover"
             />
             <div className="space-y-1 max-w-[60%]">
               <p className="truncate text-gray-200 font-medium max-w-xs text-sm flex-1">
