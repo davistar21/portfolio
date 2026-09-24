@@ -9,19 +9,37 @@ async function resolve(request: NextRequest, context: { params: Promise<{ slug: 
   if (!/^[a-z0-9][a-z0-9_-]{0,39}$/.test(slug)) {
     return new NextResponse("Short link not found.", { status: 404, headers });
   }
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!url || !key) {
-    return new NextResponse("Short links are temporarily unavailable.", { status: 503, headers });
+    console.error("Short link configuration missing:", !url ? "NEXT_PUBLIC_SUPABASE_URL" : "SUPABASE_SERVICE_ROLE_KEY");
+    return new NextResponse("Short links are temporarily unavailable.", {
+      status: 503,
+      headers: { ...headers, "X-Short-Link-Error": "configuration" },
+    });
   }
   let data: string | null;
   try {
     const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
     const result = await db.rpc("resolve_short_url", { short_slug: slug, count_visit: countVisit });
-    if (result.error) throw result.error;
+    if (result.error) {
+      console.error("Short link database lookup failed:", { code: result.error.code, status: result.status });
+      const reason = result.status === 401 ? "credentials"
+        : result.status === 403 ? "permissions"
+        : result.error.code === "PGRST202" ? "missing-function"
+        : "database";
+      return new NextResponse("Short links are temporarily unavailable.", {
+        status: 503,
+        headers: { ...headers, "X-Short-Link-Error": reason },
+      });
+    }
     data = result.data;
   } catch {
-    return new NextResponse("Short links are temporarily unavailable.", { status: 503, headers });
+    console.error("Short link database client or network request failed.");
+    return new NextResponse("Short links are temporarily unavailable.", {
+      status: 503,
+      headers: { ...headers, "X-Short-Link-Error": "connection" },
+    });
   }
   if (!data) return new NextResponse("Short link not found.", { status: 404, headers });
   try {
