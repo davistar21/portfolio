@@ -13,6 +13,7 @@ import ContactManager from "@/components/admin/ContactManager";
 import SocialsManager from "@/components/admin/SocialsManager";
 import BlogManager from "@/components/admin/BlogManager";
 import CommentsManager from "@/components/admin/CommentsManager";
+import UrlShortener from "@/components/admin/UrlShortener";
 import AcademicsManager from "@/components/admin/academics/AcademicsManager";
 import {
   User,
@@ -189,6 +190,7 @@ export default function AdminPage() {
     { id: "blog", label: "Blog", icon: FileText },
     { id: "comments", label: "Comments", icon: MessageCircle },
     { id: "academics", label: "Academics", icon: BarChart3 },
+    { id: "shortener", label: "Short Links", icon: Share2 },
   ];
 
   return (
@@ -276,6 +278,7 @@ export default function AdminPage() {
 
       <AnimatePresence mode="wait">
         <main className="flex-1 min-w-0">
+          {activeTab === "shortener" && <UrlShortener />}
           {activeTab === "bio" && <BioManager />}
           {activeTab === "projects" && <ProjectsManager />}
           {activeTab === "skills" && <SkillsManager />}
